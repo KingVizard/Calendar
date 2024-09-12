@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,63 +8,66 @@
 
     <style>
         body {
-    font-family: Arial, sans-serif;
-}
-#calendar {
-    width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-}
-#calendar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    background-color: #333;
-    color: #fff;
-}
+            font-family: Arial, sans-serif;
+        }
 
-#days {
-    display: flex;
-    /* justify-content: space-between; */
-    justify-content: space-around;
-    padding: 10px;
-    background: #333;
-    color: #fff;
+        #calendar {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
 
-    div {
-        text-align: center;
-    }
-}
+        #calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+        }
 
-#calendar-body {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
-    background: #333;
+        #days {
+            display: flex;
+            /* justify-content: space-between; */
+            justify-content: space-around;
+            padding: 10px;
+            background: #333;
+            color: #fff;
 
-    div {
-        padding: 20px;
-        background: #fff;
-        text-align: center;
-    }
+            div {
+                text-align: center;
+            }
+        }
 
-    div.today {
-        background: #f00;
-        color: #fff;
-    }
+        #calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #333;
 
-    .descanso {
-        background: blue;
-    }
-}
+            div {
+                padding: 20px;
+                background: #fff;
+                text-align: center;
+            }
 
-.change-month {
-    cursor: pointer;
-}
+            div.today {
+                background: #f00;
+                color: #fff;
+            }
 
+            .descanso {
+                color: #fff;
+                background: blue;
+            }
+        }
+
+        .change-month {
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body>
     <h1>Dias de descanso</h1>
     <div id="calendar">
@@ -74,7 +78,7 @@
         </div>
         <div id="days"></div>
         <div id="calendar-body">
-           
+
         </div>
     </div>
 
@@ -90,13 +94,13 @@
 
             //ultimo dia del mes - cantidad de dias que tiene el mes
             const lastDay = new Date(
-                
+
                 date.getFullYear(),
                 date.getMonth() + 1,
                 0
-                
+
             ).getDate();
-            
+
             //imprime 31 
             const prevLastDay = new Date(
                 date.getFullYear(),
@@ -104,19 +108,19 @@
                 0
             ).getDate();
 
-            
+
             const firstDayIndex = date.getDay(); //imprime 0
-            
+
             //imprime 1
             const lastDayIndex = new Date(
                 date.getFullYear(),
                 date.getMonth() + 1,
                 0
             ).getDay();
-            
-            
+
+
             const nextDays = 7 - lastDayIndex - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
-            
+
             const months = [
                 'Enero',
                 'Febrero',
@@ -131,7 +135,7 @@
                 'Noviembre',
                 'Diciembre'
             ];
-            
+
             const days = [
                 'DOM',
                 'LUN',
@@ -141,29 +145,46 @@
                 'VIE',
                 'SAB'
             ];
-            
+
             month.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`; //imprime nombre del mes
             daysElement.innerHTML = days.map(day => `<div>${day}</div>`).join(''); //imprime los dias de Dom a Sab
-            
+
             let dates = '';
-            
+
             for (let x = firstDayIndex; x > 0; x--) {
-                dates += `<div class='prev-date'>${prevLastDay - x +1}</div>`;
-                
+                dates += `<div class='prev-date'>${prevLastDay - x + 1}</div>`;
+
             }
 
             //Impresion de los dias del mes
+            let diaDescanso = 13;
             for (let i = 1; i <= lastDay; i++) {
+
+                // let diaaas = i;
+                // if (i === diaaas) {
+                //     dates += `<div class="today">${i}</div>`; //esto funciono
+                // }
+
+                // for (diaaas; diaaas => 0; diaaas + 7) {
+                //     dates += `<div class="today">${i}</div>`; //dia actual (hoy)
+                // }
+
+                // ---------------------
                 if (
                     i === new Date().getDate() &&
                     date.getMonth() === new Date().getMonth() &&
                     date.getFullYear() === new Date().getFullYear()
-                ){
+                ) {
                     dates += `<div class="today">${i}</div>`; //dia actual (hoy)
-                }else {
+                }
+                else if (i === diaDescanso) {
+                    dates += `<div class="descanso">${i}</div>`
+                    diaDescanso += 8;
+                    console.log(diaDescanso + ' ' + i);
+                }
+                else {
                     dates += `<div>${i}</div>` //dias del mes actual
                 }
-                
             }
 
             for (let j = 1; j <= nextDays; j++) {
@@ -171,7 +192,7 @@
             }
 
             monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
-            
+
             // console.log(monthDays.innerHTML);
             // console.log(dates);
             if (dates === 13) {
@@ -202,4 +223,5 @@
         renderCalendar();
     </script>
 </body>
+
 </html>
