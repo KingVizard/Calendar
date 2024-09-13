@@ -83,9 +83,18 @@
     </div>
 
     <script>
+
+        const diaDescanso = 13;
+        let sumaDias = 0;
+        let diasFaltantesTerminarMes = 0;
+        let posicionArray = 0;
+        let diasSeleccionados = [];
+        let ultimoDiaMes = 0;
+
         let date = new Date();
 
         function renderCalendar() {
+            sumaDias = diaDescanso;
             date.setDate(1);
 
             const monthDays = document.getElementById('calendar-body');
@@ -94,11 +103,9 @@
 
             //ultimo dia del mes - cantidad de dias que tiene el mes
             const lastDay = new Date(
-
                 date.getFullYear(),
                 date.getMonth() + 1,
                 0
-
             ).getDate();
 
             //imprime 31 
@@ -108,7 +115,6 @@
                 0
             ).getDate();
 
-
             const firstDayIndex = date.getDay(); //imprime 0
 
             //imprime 1
@@ -117,7 +123,6 @@
                 date.getMonth() + 1,
                 0
             ).getDay();
-
 
             const nextDays = 7 - lastDayIndex - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
 
@@ -153,22 +158,10 @@
 
             for (let x = firstDayIndex; x > 0; x--) {
                 dates += `<div class='prev-date'>${prevLastDay - x + 1}</div>`;
-
             }
 
-            //Impresion de los dias del mes
-            let diaDescanso = 13;
+            //Impresion de los dias del mes que se ve
             for (let i = 1; i <= lastDay; i++) {
-
-                // let diaaas = i;
-                // if (i === diaaas) {
-                //     dates += `<div class="today">${i}</div>`; //esto funciono
-                // }
-
-                // for (diaaas; diaaas => 0; diaaas + 7) {
-                //     dates += `<div class="today">${i}</div>`; //dia actual (hoy)
-                // }
-
                 // ---------------------
                 if (
                     i === new Date().getDate() &&
@@ -177,11 +170,24 @@
                 ) {
                     dates += `<div class="today">${i}</div>`; //dia actual (hoy)
                 }
-                else if (i === diaDescanso) {
-                    dates += `<div class="descanso">${i}</div>`
-                    diaDescanso += 8;
-                    console.log(diaDescanso + ' ' + i);
+                else if (
+                    i === sumaDias &&
+                    date.getMonth() === new Date().getMonth() &&
+                    date.getFullYear() === new Date().getFullYear()
+                    && i <= lastDay
+                ) {
+                    dates += `<div class="descanso">${i}</div>`;
+                    
+                    sumaDias += 8; //37
+                    
+                    // if (sumaDias < lastDay) {
+                    //     ultimoDiaMes = sumaDias; //29
+                    // }
+                        // console.log(sum);
                 }
+                // else if(sumaDias >= lastDay) {
+                //     sumaDias = diaDescanso;
+                // }
                 else {
                     dates += `<div>${i}</div>` //dias del mes actual
                 }
@@ -192,13 +198,6 @@
             }
 
             monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
-
-            // console.log(monthDays.innerHTML);
-            // console.log(dates);
-            if (dates === 13) {
-                dates += `<div class="today">${dates}</div>`;
-            }
-
         }
 
         document.getElementById('month-prev').addEventListener('click', () => {
@@ -208,9 +207,9 @@
                 renderCalendar();
                 document.getElementById('calendar-body').classList.remove('fade-out');
             }, 500);
-
+            // console.log('<- ' + ultimoDiaMes)
         });
-
+        
         document.getElementById('month-next').addEventListener('click', () => {
             document.getElementById('calendar-body').classList.add('fade-out');
             setTimeout(() => {
@@ -218,6 +217,7 @@
                 renderCalendar();
                 document.getElementById('calendar-body').classList.remove('fade-out');
             }, 500);
+            // console.log('-> ' + ultimoDiaMes)
         });
 
         renderCalendar();
