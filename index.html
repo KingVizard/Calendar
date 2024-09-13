@@ -86,10 +86,13 @@
 
         const diaDescanso = 13;
         let sumaDias = 0;
+        let restaDias = 0;
         let diasFaltantesTerminarMes = 0;
         let posicionArray = 0;
         let diasSeleccionados = [];
         let ultimoDiaMes = 0;
+        let nuevoValorDiaDesc = 0;
+
 
         let date = new Date();
 
@@ -163,38 +166,60 @@
             //Impresion de los dias del mes que se ve
             for (let i = 1; i <= lastDay; i++) {
                 // ---------------------
-                if (
-                    i === new Date().getDate() &&
-                    date.getMonth() === new Date().getMonth() &&
-                    date.getFullYear() === new Date().getFullYear()
-                ) {
-                    dates += `<div class="today">${i}</div>`; //dia actual (hoy)
+                if (date.getMonth() === new Date().getMonth() &&
+                    date.getFullYear() === new Date().getFullYear()) {
+
+
+                    if (
+                        i === new Date().getDate()
+                        // &&
+                        // date.getMonth() === new Date().getMonth() &&
+                        // date.getFullYear() === new Date().getFullYear()
+                    ) {
+                        dates += `<div class="today">${i}</div>`; //dia actual (hoy)
+                    }
+                    else if (
+                        i === sumaDias &&
+                        date.getMonth() === new Date().getMonth() &&
+                        date.getFullYear() === new Date().getFullYear()
+                        // && i <= lastDay
+                    ) {
+                        dates += `<div class="descanso">${i}</div>`;
+
+                        sumaDias += 8; //37
+
+                        ultimoDiaMes = sumaDias; //37
+                        restaDias = lastDay;
+                    }
+
+                    else {
+                        dates += `<div>${i}</div>` //dias del mes actual
+                    }
                 }
-                else if (
-                    i === sumaDias &&
-                    date.getMonth() === new Date().getMonth() &&
-                    date.getFullYear() === new Date().getFullYear()
-                    && i <= lastDay
-                ) {
-                    dates += `<div class="descanso">${i}</div>`;
-                    
-                    sumaDias += 8; //37
-                    
-                    // if (sumaDias < lastDay) {
-                    //     ultimoDiaMes = sumaDias; //29
-                    // }
-                        // console.log(sum);
-                }
-                // else if(sumaDias >= lastDay) {
-                //     sumaDias = diaDescanso;
-                // }
+
                 else {
-                    dates += `<div>${i}</div>` //dias del mes actual
+                    //asigno el nuevo valor del dia de desc
+                    if (ultimoDiaMes >= lastDay && nuevoValorDiaDesc === 0) {
+                        // ultimoDiaMes - restaDias;
+                            // console.log(ultimoDiaMes - restaDias)
+                            nuevoValorDiaDesc = ultimoDiaMes - restaDias;
+                            console.log(nuevoValorDiaDesc);
+                    }
+                    if (i === nuevoValorDiaDesc) {
+                        dates += `<div class="descanso">${i}</div>`;
+                        nuevoValorDiaDesc += 8;
+                    }
+                    else {
+                        dates += `<div>${i}</div>` //dias del resto de meses
+                        // console.log(restaDias);
+                    }
+
                 }
+
             }
 
             for (let j = 1; j <= nextDays; j++) {
-                dates += `<div class="next-date">${j}</div>`; //dias del proximo mes
+                dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
             }
 
             monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
@@ -203,21 +228,19 @@
         document.getElementById('month-prev').addEventListener('click', () => {
             document.getElementById('calendar-body').classList.add('fade-out');
             setTimeout(() => {
-                date.setMonth(date.getMonth() - 1);
+                date.setMonth(date.getMonth() - 1); //asigna el mes
                 renderCalendar();
                 document.getElementById('calendar-body').classList.remove('fade-out');
             }, 500);
-            // console.log('<- ' + ultimoDiaMes)
         });
-        
+
         document.getElementById('month-next').addEventListener('click', () => {
             document.getElementById('calendar-body').classList.add('fade-out');
             setTimeout(() => {
-                date.setMonth(date.getMonth() + 1);
+                date.setMonth(date.getMonth() + 1);//asigna el mes
                 renderCalendar();
                 document.getElementById('calendar-body').classList.remove('fade-out');
             }, 500);
-            // console.log('-> ' + ultimoDiaMes)
         });
 
         renderCalendar();
