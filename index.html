@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es-MX">
 
 <head>
     <meta charset="UTF-8">
@@ -105,7 +105,7 @@
         // // Formatear la fecha
         // const fechaFormateada = format(fecha, 'dd/MM/yyyy'); // Formato: día/mes/año
         // console.log(fechaFormateada); // Muestra: "15/09/2024"
-
+        let fullFecha;
         // Crear una fecha
         const fecha2 = new Date(2024, 8, 13); // 15 de septiembre de 2024
 
@@ -114,25 +114,15 @@
         // const fechaFormateada = fecha2.toLocaleDateString('es-ES', opciones);
         // console.log(fechaFormateada); // Muestra: "15/09/2024"
 
-        const diaDescanso = 13;
-        // let sumaDias = 0;
-        // let sumaProxMes = 0;
-        // let restaDias = 0;
-        // let diasFaltantesTerminarMes = 0;
-        // let posicionArray = 0;
-        // let diasSeleccionados = [];
+        // const diaDescanso = 13;
+
         let ultimoDiaMes = 0;
         let operacionDiasFinal = 0;
-        let diasExcedentes = 0;
-        // let nuevoValorDiaDesc = 0;
-        // let l = 0;
-        // const fechaDeReferencia = 0;
         let fechaDeReferencia = new Date(0);
 
         let date = new Date();
 
         function renderCalendar() {
-            sumaDias = diaDescanso;
             date.setDate(1);
 
             const monthDays = document.getElementById('calendar-body');
@@ -201,20 +191,18 @@
 
             //Impresion de los dias del mes que se ve
             // --------Fecha de referencia / dia / mes / año------------- //permite tener un punto de partida
-            // console.log('fecha2: ' + new Date().getFullYear() ++ );
             if (fecha2.getFullYear() >= new Date().getFullYear()) {
-                // console.log('fecha2+: ' + fecha2);
                 fechaDeReferencia = fecha2.getDate();
-                // console.log('fechaDeReferencia: ' + fechaDeReferencia);
+
                 for (let i = 1; i <= lastDay; i++) {
                     
                     // --------DIAS DEL MES ACTUAL-------------
                     if (date.getMonth() === new Date().getMonth() &&
                     date.getFullYear() === new Date().getFullYear()) {
                         
-                        if (i === new Date().getDate() && i != sumaDias) {
-                            dates += `<div class="today">${i}</div>`; //dia actual (hoy)
-                        }
+                        if (i === new Date().getDate()) {
+                            dates += `<div class="today">${i}</div>`; //dia actual (hoy) 
+                    }
                         else if (fechaDeReferencia === i) {
                             dates += `<div class="descanso">${i}</div>`;
                             fechaDeReferencia += 8;
@@ -232,23 +220,47 @@
                     }
                     // --------DIAS DE LOS DEMAS MESES-------------
                     else {
+
+                        // if (date.getMonth() != new Date().getMonth()) {
+                        //     if (date.getMonth())
+                        // }
                         
                         if (operacionDiasFinal > 0) {
-
-                            if (operacionDiasFinal === i) {
-
+                            // ------------------------
+                            if (operacionDiasFinal === i) {                          
                                 dates += `<div class="descanso">${i}</div>`;
+                                
+                                // console.log(operacionDiasFinal) //PTE  
+                                // console.log(months[date.getMonth()]) //PTE
+                                // console.log(fecha2.getFullYear()) //PTE 
+                                
+                                fullFecha = operacionDiasFinal + '-' + months[date.getMonth()] + '-' + fecha2.getFullYear();
+                                
+                                let determinarDia = new Date(fullFecha);
+                                let diaDeLaSemana = determinarDia.getDay();
+                                
+                                // determinarDia.getDay(diaDeLaSemana);
+                                
+                                console.log(days[diaDeLaSemana]) //PTE 
+                                
+                                // console.log(diaDeLaSemana) //PTE  
+                                
+
                                 operacionDiasFinal += 8;
-
                                 if (operacionDiasFinal > lastDay) {
-                                operacionDiasFinal -= lastDay;
+                                    operacionDiasFinal -= lastDay;
                                 }
-                            }else {
+                            }
+                            // ------------------------
 
+                            // if() {
+
+                            // }
+                            else {
                                 dates += `<div>${i}</div>` //DIAS DE LOS DEMAS MESES
                             }
-
-                        } else {
+                        } 
+                        else {
 
                             dates += `<div>${i}</div>` //DIAS DE LOS DEMAS MESES
                         }
@@ -316,37 +328,7 @@
 
         renderCalendar();
 
-        function calcularDiaProximoMes(año, mes) {
-            // Día inicial
-            const diaInicial = 29;
-            // Sumar 8 días
-            const diasASumar = 8;
 
-            // Calcular el día final
-            const diaFinal = diaInicial + diasASumar; //37
-
-
-            // console.log('dF: ' + diaFinal)
-
-            // Obtener el número de días en el mes actual
-            const diasDelMesActual = new Date(año, mes + 1, 0).getDate(); //30
-
-            let diaDelProximoMes;
-
-            if (diaFinal > diasDelMesActual) {
-                // Si el día final excede el número de días del mes actual
-                const diasRestantes = diaFinal - diasDelMesActual; // Días que pasan al próximo mes
-                diaDelProximoMes = diasRestantes; // Este será el día en el próximo mes
-            } else {
-                // Si el día final está dentro del mes actual
-                diaDelProximoMes = diaFinal;
-            }
-
-            // console.log(`El día ${diaInicial} del mes ${mes + 1} más ${diasASumar} días es el día ${diaDelProximoMes} del próximo mes.`);
-        }
-
-        // Ejemplo de uso
-        calcularDiaProximoMes(2024, 8); // Para septiembre de 2024
 
     </script>
 </body>
