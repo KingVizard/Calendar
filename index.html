@@ -100,19 +100,19 @@
     <script>
 
         // // Crear una fecha
-// const fecha2 = new Date(2024, 8, 15); // 15 de septiembre de 2024
+        // const fecha2 = new Date(2024, 8, 15); // 15 de septiembre de 2024
 
-// // Formatear la fecha
-// const fechaFormateada = format(fecha, 'dd/MM/yyyy'); // Formato: día/mes/año
-// console.log(fechaFormateada); // Muestra: "15/09/2024"
+        // // Formatear la fecha
+        // const fechaFormateada = format(fecha, 'dd/MM/yyyy'); // Formato: día/mes/año
+        // console.log(fechaFormateada); // Muestra: "15/09/2024"
 
-                        // Crear una fecha
-const fecha2 = new Date(2024, 8, 13); // 15 de septiembre de 2024
+        // Crear una fecha
+        const fecha2 = new Date(2024, 8, 13); // 15 de septiembre de 2024
 
-// Dar formato a la fecha
-// const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
-// const fechaFormateada = fecha2.toLocaleDateString('es-ES', opciones);
-// console.log(fechaFormateada); // Muestra: "15/09/2024"
+        // Dar formato a la fecha
+        // const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        // const fechaFormateada = fecha2.toLocaleDateString('es-ES', opciones);
+        // console.log(fechaFormateada); // Muestra: "15/09/2024"
 
         const diaDescanso = 13;
         // let sumaDias = 0;
@@ -204,71 +204,97 @@ const fecha2 = new Date(2024, 8, 13); // 15 de septiembre de 2024
             // console.log('fecha2: ' + new Date().getFullYear() ++ );
             if (fecha2.getFullYear() >= new Date().getFullYear()) {
                 // console.log('fecha2+: ' + fecha2);
-                fechaDeReferencia = fecha2;
-                // console.log('fechaDeReferencia+: ' + fechaDeReferencia);
-            }   
-
-            for (let i = 1; i <= lastDay; i++) {
-
-                // --------MES ACTUAL-------------
-                if (date.getMonth() === new Date().getMonth() &&
+                fechaDeReferencia = fecha2.getDate();
+                // console.log('fechaDeReferencia: ' + fechaDeReferencia);
+                for (let i = 1; i <= lastDay; i++) {
+                    
+                    // --------DIAS DEL MES ACTUAL-------------
+                    if (date.getMonth() === new Date().getMonth() &&
                     date.getFullYear() === new Date().getFullYear()) {
-
-                    if (i === new Date().getDate() && i != sumaDias) {
-                        dates += `<div class="today">${i}</div>`; //dia actual (hoy)
-                        // Crear una fecha específica: 15 de septiembre de 2024
-                        const fecha = new Date(2024, 8, 15); // Recuerda que los meses son indexados desde 0 (0 = enero, 8 = septiembre)
-
-                        // console.log(fecha); // Muestra la fecha en la consola
-
-                        // let fechaCompleta = `${diaSemana[fechaHora.getDay()]}, ${fechaHora.getDate()} ${mesAnyo[fechaHora.getMonth()]} ${fechaHora.getFullYear()}`;
-                        // console.log(new Date().getDate())
-                        // console.log(new Date().getDay())
-                        // console.log(new Date().getMonth() + 1)
-                        // console.log(new Date().getFullYear())
-
-                        let fechaHora = new Date();
-
-                        let fechaCompleta = `${fechaHora.getDate()} ${fechaHora.getMonth() + 1} ${fechaHora.getFullYear()}`;
-                        // console.log(fechaCompleta);
                         
-                        
-                        
-                        // console.log('fechaF: ' + fecha2.getDate());
-                        // console.log('fechaF: ' + fecha2.getMonth());
-                        // console.log('fechaF: ' + fecha2.getFullYear());
-
-
-                    }
-                    else if (i === sumaDias) {
-                        dates += `<div class="descanso">${i}</div>`;
-                        sumaDias += 8; //37
-                        if (sumaDias <= lastDay) {
-                            // restaDias = lastDay - sumaDias;
-                            ultimoDiaMes = sumaDias
-                            // console.log(ultimoDiaMes);
+                        if (i === new Date().getDate() && i != sumaDias) {
+                            dates += `<div class="today">${i}</div>`; //dia actual (hoy)
+                        }
+                        else if (fechaDeReferencia === i) {
+                            dates += `<div class="descanso">${i}</div>`;
+                            fechaDeReferencia += 8;
+                            
+                            ultimoDiaMes = fechaDeReferencia;
+                            
+                            
+                            if (ultimoDiaMes > lastDay) {
+                                operacionDiasFinal = ultimoDiaMes - lastDay;
+                            }
+                        }
+                        else {
+                            dates += `<div>${i}</div>` //dias del mes actual
                         }
                     }
+                    // --------DIAS DE LOS DEMAS MESES-------------
                     else {
-                        dates += `<div>${i}</div>` //dias del mes actual
+                        
+                        if (operacionDiasFinal > 0) {
+
+                            if (operacionDiasFinal === i) {
+
+                                dates += `<div class="descanso">${i}</div>`;
+                                operacionDiasFinal += 8;
+
+                                if (operacionDiasFinal > lastDay) {
+                                operacionDiasFinal -= lastDay;
+                                }
+                            }else {
+
+                                dates += `<div>${i}</div>` //DIAS DE LOS DEMAS MESES
+                            }
+
+                        } else {
+
+                            dates += `<div>${i}</div>` //DIAS DE LOS DEMAS MESES
+                        }
+
+
                     }
                 }
-                else {
 
-                    if (i == fechaDeReferencia) {
-
-                    }
-                    dates += `<div>${i + 'XD'}</div>` //dias del resto de meses
+                //completa los dias finales del mes siguiente
+                for (let j = 1; j <= nextDays; j++) {
+                    dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
                 }
+
+                monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
             }
 
-            //completa los dias finales del mes siguiente
-            for (let j = 1; j <= nextDays; j++) {
-                dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
-            }
 
-            monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
+            //     else {
+            //         for (let i = 1; i <= lastDay; i++) { //sin Punto de partida
+
+            //             // --------MES ACTUAL-------------
+            //             if (date.getMonth() === new Date().getMonth() &&
+            //                 date.getFullYear() === new Date().getFullYear()) {
+
+            //                 if (i === new Date().getDate() && i != sumaDias) {
+            //                     dates += `<div class="today">${i}</div>`; //dia actual (hoy)
+            //                 }
+            //                 else {
+            //                     dates += `<div>${i}</div>` //dias del mes actual
+            //                 }
+            //             }
+            //             else {
+            //                 dates += `<div>${i}</div>` //dias del mes actual
+            //             }
+            //         }
+            //         //completa los dias finales del mes siguiente
+            //         for (let j = 1; j <= nextDays; j++) {
+            //             dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
+            //         }
+
+            //         monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
+            //     }
+
         }
+
+
 
         document.getElementById('month-prev').addEventListener('click', () => {
             document.getElementById('calendar-body').classList.add('fade-out');
@@ -297,13 +323,13 @@ const fecha2 = new Date(2024, 8, 13); // 15 de septiembre de 2024
             const diasASumar = 8;
 
             // Calcular el día final
-            const diaFinal = diaInicial + diasASumar;
+            const diaFinal = diaInicial + diasASumar; //37
 
 
             // console.log('dF: ' + diaFinal)
 
             // Obtener el número de días en el mes actual
-            const diasDelMesActual = new Date(año, mes + 1, 0).getDate();
+            const diasDelMesActual = new Date(año, mes + 1, 0).getDate(); //30
 
             let diaDelProximoMes;
 
