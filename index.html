@@ -98,23 +98,13 @@
     </div>
 
     <script>
-
-        // // Crear una fecha
-        // const fecha2 = new Date(2024, 8, 15); // 15 de septiembre de 2024
-
-        // // Formatear la fecha
-        // const fechaFormateada = format(fecha, 'dd/MM/yyyy'); // Formato: día/mes/año
-        // console.log(fechaFormateada); // Muestra: "15/09/2024"
+        
         let fullFecha;
         // Crear una fecha
         const fecha2 = new Date(2024, 8, 13); // 15 de septiembre de 2024
 
-        // Dar formato a la fecha
-        // const opciones = { year: 'numeric', month: '2-digit', day: '2-digit' };
-        // const fechaFormateada = fecha2.toLocaleDateString('es-ES', opciones);
-        // console.log(fechaFormateada); // Muestra: "15/09/2024"
+        let validar = 0;
 
-        // const diaDescanso = 13;
 
         let ultimoDiaMes = 0;
         let operacionDiasFinal = 0;
@@ -195,21 +185,21 @@
                 fechaDeReferencia = fecha2.getDate();
 
                 for (let i = 1; i <= lastDay; i++) {
-                    
+
                     // --------DIAS DEL MES ACTUAL-------------
                     if (date.getMonth() === new Date().getMonth() &&
-                    date.getFullYear() === new Date().getFullYear()) {
-                        
+                        date.getFullYear() === new Date().getFullYear()) {
+
                         if (i === new Date().getDate()) {
                             dates += `<div class="today">${i}</div>`; //dia actual (hoy) 
-                    }
+                        }
                         else if (fechaDeReferencia === i) {
                             dates += `<div class="descanso">${i}</div>`;
                             fechaDeReferencia += 8;
-                            
+
                             ultimoDiaMes = fechaDeReferencia;
-                            
-                            
+
+
                             if (ultimoDiaMes > lastDay) {
                                 operacionDiasFinal = ultimoDiaMes - lastDay;
                             }
@@ -221,48 +211,58 @@
                     // --------DIAS DE LOS DEMAS MESES-------------
                     else {
 
-                        // if (date.getMonth() != new Date().getMonth()) {
-                        //     if (date.getMonth())
-                        // }
-                        
-                        if (operacionDiasFinal > 0) {
-                            // ------------------------
-                            if (operacionDiasFinal === i) {                          
-                                dates += `<div class="descanso">${i}</div>`;
-                                
-                                // console.log(operacionDiasFinal) //PTE  
-                                // console.log(months[date.getMonth()]) //PTE
-                                // console.log(fecha2.getFullYear()) //PTE 
-                                
-                                fullFecha = operacionDiasFinal + '-' + months[date.getMonth()] + '-' + fecha2.getFullYear();
-                                
-                                let determinarDia = new Date(fullFecha);
-                                let diaDeLaSemana = determinarDia.getDay();
-                                
-                                // determinarDia.getDay(diaDeLaSemana);
-                                
-                                console.log(days[diaDeLaSemana]) //PTE 
-                                
-                                // console.log(diaDeLaSemana) //PTE  
-                                
 
-                                operacionDiasFinal += 8;
+                        
+                        
+                        // ----------DIAS DE DESCANSO--------------
+                        if (operacionDiasFinal > 0) {
+                            
+                            fullFecha = operacionDiasFinal + '-' + months[date.getMonth()] + '-' + fecha2.getFullYear();
+                            let determinarDia = new Date(fullFecha);
+                            let diaDeLaSemana = determinarDia.getDay();
+                            
+                            if (operacionDiasFinal === i) {
+
+                                //MARTES Y MIERCOLESS
+
+                                if (diaDeLaSemana === 2) { //todos los que no son 2 entran
+                                    dates += `<div class="descanso">${i}</div>`;
+                                    operacionDiasFinal += 9;
+                                    validar = 1;
+                                }
+
+                                else {
+                                    dates += `<div class="descanso">${i}</div>`;
+                                    operacionDiasFinal += 8;
+                                }
+                                
+                                
                                 if (operacionDiasFinal > lastDay) {
                                     operacionDiasFinal -= lastDay;
                                 }
+                                //MARTES Y MIERCOLESS
                             }
                             // ------------------------
-
-                            // if() {
-
-                            // }
+                            
                             else {
-                                dates += `<div>${i}</div>` //DIAS DE LOS DEMAS MESES
+                                
+                                let removeFecha = i + '-' + months[date.getMonth()] + '-' + fecha2.getFullYear();
+                                let removeDia = new Date(removeFecha);
+                                
+                                if (removeDia.getDay() === 3 && validar > 0) {
+                                    
+                                    dates += `<div class="descanso">${i}</div>`;
+                                    validar = 0;
+                                }
+                                else {
+
+                                    dates += `<div>${i}</div>`; //DIAS DE LOS DEMAS MESES
+                                }
+                                
                             }
-                        } 
+                        }
                         else {
 
-                            dates += `<div>${i}</div>` //DIAS DE LOS DEMAS MESES
                         }
 
 
