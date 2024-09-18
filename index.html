@@ -9,6 +9,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background: #222;
         }
 
         #calendar {
@@ -98,17 +99,26 @@
     </div>
 
     <script>
-        
+
         let fullFecha;
         // Crear una fecha
-        const fecha2 = new Date(2024, 8, 13); // 15 de septiembre de 2024
+        const fecha2 = new Date(2024, 8, 13);
 
         let validar = 0;
-
+        let mesAtras;
 
         let ultimoDiaMes = 0;
         let operacionDiasFinal = 0;
         let fechaDeReferencia = new Date(0);
+
+
+        let fechaInicio = 5;
+        let incrementador = 0;
+        let apuntadorProxMes = 0;
+        let mesReferencia = 0;
+        let martes = 0;
+        let fechaFinal = 29;
+
 
         let date = new Date();
 
@@ -182,93 +192,67 @@
             //Impresion de los dias del mes que se ve
             // --------Fecha de referencia / dia / mes / año------------- //permite tener un punto de partida
             if (fecha2.getFullYear() >= new Date().getFullYear()) {
+
                 fechaDeReferencia = fecha2.getDate();
 
+                incrementador = fechaInicio;
                 for (let i = 1; i <= lastDay; i++) {
-
                     // --------DIAS DEL MES ACTUAL-------------
                     if (date.getMonth() === new Date().getMonth() &&
                         date.getFullYear() === new Date().getFullYear()) {
-
+                        mesReferencia = date.getMonth();
                         if (i === new Date().getDate()) {
                             dates += `<div class="today">${i}</div>`; //dia actual (hoy) 
                         }
-                        else if (fechaDeReferencia === i) {
-                            dates += `<div class="descanso">${i}</div>`;
-                            fechaDeReferencia += 8;
 
-                            ultimoDiaMes = fechaDeReferencia;
+                        else if (fechaInicio > 0) {
+                            if (incrementador === i) {
+                                dates += `<div class="descanso">${i}</div>`;
+                                incrementador += 8;
 
+                                if (incrementador > lastDay) {
+                                    apuntadorProxMes = incrementador - lastDay;
+                                }
+                            }
+                            else {
 
-                            if (ultimoDiaMes > lastDay) {
-                                operacionDiasFinal = ultimoDiaMes - lastDay;
+                                dates += `<div>${i}</div>` //dias del mes actual
                             }
                         }
                         else {
                             dates += `<div>${i}</div>` //dias del mes actual
                         }
                     }
-                    // --------DIAS DE LOS DEMAS MESES-------------
                     else {
 
+                        if (apuntadorProxMes > 0) {
 
-                        
-                        
-                        // ----------DIAS DE DESCANSO--------------
-                        if (operacionDiasFinal > 0) {
-                            
-                            fullFecha = operacionDiasFinal + '-' + months[date.getMonth()] + '-' + fecha2.getFullYear();
-                            let determinarDia = new Date(fullFecha);
-                            let diaDeLaSemana = determinarDia.getDay();
-                            
-                            if (operacionDiasFinal === i) {
+                            if (apuntadorProxMes === i) { //7
+                                martes = date.getFullYear() + '-' + date.getMonth() + '-' + apuntadorProxMes; //2024-9-7
+                                let transformarFecha = new Date(martes);
+                                console.log(martes);
 
-                                //MARTES Y MIERCOLESS
-
-                                if (diaDeLaSemana === 2) { //todos los que no son 2 entran
-                                    dates += `<div class="descanso">${i}</div>`;
-                                    operacionDiasFinal += 9;
-                                    validar = 1;
+                                if (transformarFecha.getDay() === 2) {
+                                    console.log("hay 2: " + i);
                                 }
 
-                                else {
-                                    dates += `<div class="descanso">${i}</div>`;
-                                    operacionDiasFinal += 8;
+                                dates += `<div class="descanso">${i}</div>`;
+
+                                apuntadorProxMes += 8;
+
+                                if (apuntadorProxMes > lastDay) {
+                                    apuntadorProxMes = apuntadorProxMes - lastDay;
                                 }
-                                
-                                
-                                if (operacionDiasFinal > lastDay) {
-                                    operacionDiasFinal -= lastDay;
-                                }
-                                //MARTES Y MIERCOLESS
                             }
-                            // ------------------------
-                            
                             else {
-                                
-                                let removeFecha = i + '-' + months[date.getMonth()] + '-' + fecha2.getFullYear();
-                                let removeDia = new Date(removeFecha);
-                                
-                                if (removeDia.getDay() === 3 && validar > 0) {
-                                    
-                                    dates += `<div class="descanso">${i}</div>`;
-                                    validar = 0;
-                                }
-                                else {
-
-                                    dates += `<div>${i}</div>`; //DIAS DE LOS DEMAS MESES
-                                }
-                                
+                                dates += `<div>${i}</div>`
                             }
                         }
                         else {
-
+                            dates += `<div>${i}</div>`
                         }
-
-
                     }
                 }
-
                 //completa los dias finales del mes siguiente
                 for (let j = 1; j <= nextDays; j++) {
                     dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
@@ -276,42 +260,15 @@
 
                 monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
             }
-
-
-            //     else {
-            //         for (let i = 1; i <= lastDay; i++) { //sin Punto de partida
-
-            //             // --------MES ACTUAL-------------
-            //             if (date.getMonth() === new Date().getMonth() &&
-            //                 date.getFullYear() === new Date().getFullYear()) {
-
-            //                 if (i === new Date().getDate() && i != sumaDias) {
-            //                     dates += `<div class="today">${i}</div>`; //dia actual (hoy)
-            //                 }
-            //                 else {
-            //                     dates += `<div>${i}</div>` //dias del mes actual
-            //                 }
-            //             }
-            //             else {
-            //                 dates += `<div>${i}</div>` //dias del mes actual
-            //             }
-            //         }
-            //         //completa los dias finales del mes siguiente
-            //         for (let j = 1; j <= nextDays; j++) {
-            //             dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
-            //         }
-
-            //         monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
-            //     }
-
         }
-
-
 
         document.getElementById('month-prev').addEventListener('click', () => {
             document.getElementById('calendar-body').classList.add('fade-out');
             setTimeout(() => {
                 date.setMonth(date.getMonth() - 1); //asigna el mes
+
+
+
                 renderCalendar();
                 document.getElementById('calendar-body').classList.remove('fade-out');
             }, 500);
@@ -321,14 +278,13 @@
             document.getElementById('calendar-body').classList.add('fade-out');
             setTimeout(() => {
                 date.setMonth(date.getMonth() + 1);//asigna el mes
+
                 renderCalendar();
                 document.getElementById('calendar-body').classList.remove('fade-out');
             }, 500);
         });
 
         renderCalendar();
-
-
 
     </script>
 </body>
