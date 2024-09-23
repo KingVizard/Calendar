@@ -106,18 +106,33 @@
 
         let validar = 0;
         let mesAtras;
+        let mesAdelante;
 
         let ultimoDiaMes = 0;
         let operacionDiasFinal = 0;
         let fechaDeReferencia = new Date(0);
 
-
+        //---------------------------
         let fechaInicio = 5;
         let incrementador = 0;
+        let decrementador = 0;
         let apuntadorProxMes = 0;
+        let apuntadorMesAnterior = 0;
         let mesReferencia = 0;
         let martes = 0;
+        let miercoles = 0;
         let fechaFinal = 29;
+        let obtencionValorMesAnterior = 0;
+
+
+        let restaMes = 0;
+        let sumaMes = 0;
+
+        let fechaNueva = new Date();
+
+        let fechaAux = 1;
+        //---------------------------
+
 
 
         let date = new Date();
@@ -190,76 +205,117 @@
             }
 
             //Impresion de los dias del mes que se ve
-            // --------Fecha de referencia / dia / mes / año------------- //permite tener un punto de partida
-            if (fecha2.getFullYear() >= new Date().getFullYear()) {
+            incrementador = fechaInicio;
 
-                fechaDeReferencia = fecha2.getDate();
+            for (let cantidadDNumeros = 1; cantidadDNumeros <= 7; cantidadDNumeros++) {
+                decrementador = cantidadDNumeros + fechaInicio; //6
 
-                incrementador = fechaInicio;
-                for (let i = 1; i <= lastDay; i++) {
-                    // --------DIAS DEL MES ACTUAL-------------
-                    if (date.getMonth() === new Date().getMonth() &&
-                        date.getFullYear() === new Date().getFullYear()) {
-                        mesReferencia = date.getMonth();
-                        if (i === new Date().getDate()) {
-                            dates += `<div class="today">${i}</div>`; //dia actual (hoy) 
-                        }
+                if (decrementador === 8) {
+                    obtencionValorMesAnterior = cantidadDNumeros;
+                }
+            }
 
-                        else if (fechaInicio > 0) {
-                            if (incrementador === i) {
-                                dates += `<div class="descanso">${i}</div>`;
-                                incrementador += 8;
 
-                                if (incrementador > lastDay) {
-                                    apuntadorProxMes = incrementador - lastDay;
-                                }
-                            }
-                            else {
 
-                                dates += `<div>${i}</div>` //dias del mes actual
+            for (let i = 1; i <= lastDay; i++) {
+                // --------DIAS DEL MES ACTUAL-------------
+                if (date.getMonth() === new Date().getMonth() &&
+                    date.getFullYear() === new Date().getFullYear()) {
+                    mesReferencia = date.getMonth();
+                    // ------
+
+
+
+                    // apuntadorMesAnterior -
+
+                    if (i === new Date().getDate() && i != incrementador) {
+                        dates += `<div class="today">${i}</div>`; //dia actual (hoy) 
+                    }
+                    else if (fechaInicio > 0) {
+
+                        if (incrementador === i) {
+
+                            dates += `<div class="descanso">${i}</div>`;
+
+                            incrementador += 8;
+                            // console.log(incrementador)
+
+                            if (incrementador > lastDay) {
+                                apuntadorProxMes = incrementador - lastDay;
+                                // console.log(apuntadorProxMes)
                             }
                         }
                         else {
+
                             dates += `<div>${i}</div>` //dias del mes actual
                         }
                     }
-                    else {
+           
+                }
+                else {
+                    // dates += `<div>${i}</div>` //dias del mes actual
 
+
+                    if (sumaMes > 0) {
+                        console.log(apuntadorProxMes);
                         if (apuntadorProxMes > 0) {
 
-                            if (apuntadorProxMes === i) { //7
-                                martes = date.getFullYear() + '-' + date.getMonth() + '-' + apuntadorProxMes; //2024-9-7
-                                let transformarFecha = new Date(martes);
-                                console.log(martes);
 
-                                if (transformarFecha.getDay() === 2) {
-                                    console.log("hay 2: " + i);
+                            if (fechaAux <= 1) {
+                                fechaAux = apuntadorProxMes;
+                            }
+                            // else {
+
+                            let ObtenerFecha = fechaNueva.getFullYear() + '/' + (date.getMonth() + 1) + '/' + fechaAux;
+
+                            martes = new Date(ObtenerFecha);
+
+
+                            if (fechaAux === i) {
+
+                                if (martes.getDay() === 2) {
+                                    miercoles = 1;
                                 }
 
                                 dates += `<div class="descanso">${i}</div>`;
 
-                                apuntadorProxMes += 8;
+                                fechaAux += 8;
 
-                                if (apuntadorProxMes > lastDay) {
-                                    apuntadorProxMes = apuntadorProxMes - lastDay;
+                                if (fechaAux > lastDay) {
+                                    apuntadorProxMes = fechaAux - lastDay;
+                                    fechaAux = 0;
                                 }
+
                             }
+
                             else {
-                                dates += `<div>${i}</div>`
+                                if (miercoles > 0) {
+                                    dates += `<div class="descanso">${i}</div>`;
+                                    miercoles = 0;
+                                    fechaAux += 1;
+                                }
+                                else {
+
+                                    dates += `<div>${i}</div>` //dias del mes actual
+                                }
+
                             }
-                        }
-                        else {
-                            dates += `<div>${i}</div>`
+
+                        } else {
+
                         }
                     }
-                }
-                //completa los dias finales del mes siguiente
-                for (let j = 1; j <= nextDays; j++) {
-                    dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
-                }
 
-                monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
+
+
+                }
             }
+            //completa los dias finales del mes siguiente
+            for (let j = 1; j <= nextDays; j++) {
+                dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
+            }
+
+            monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
         }
 
         document.getElementById('month-prev').addEventListener('click', () => {
@@ -268,8 +324,11 @@
                 date.setMonth(date.getMonth() - 1); //asigna el mes
 
 
+                restaMes = 1;
 
                 renderCalendar();
+
+                restaMes = 0;
                 document.getElementById('calendar-body').classList.remove('fade-out');
             }, 500);
         });
@@ -279,7 +338,10 @@
             setTimeout(() => {
                 date.setMonth(date.getMonth() + 1);//asigna el mes
 
+                sumaMes = 1;
+
                 renderCalendar();
+                sumaMes = 0;
                 document.getElementById('calendar-body').classList.remove('fade-out');
             }, 500);
         });
