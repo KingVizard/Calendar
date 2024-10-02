@@ -110,7 +110,7 @@
 
 <body>
 
-    <div class="calendar">
+    <!-- <div class="calendar">
         <div class="month enero">
             <div class="calendar-header">
                 <h2 class="monthName" id="monthName"></h2>
@@ -118,7 +118,7 @@
             <div class="days" id="days"></div>
             <div class="calendar-body" id="calendar-body"></div>
         </div>
-    </div>
+    </div> -->
 
     <script>
 
@@ -134,27 +134,7 @@
         
         
 
-        const daysElement_test = document.createElement('div'); //*
-        daysElement_test.classList.add('days')
 
-        const monthDays_test = document.createElement('div');
-        monthDays_test.classList.add('calendar-body')
-        monthDays_test.appendChild(daysElement_test);
-        
-        const monthName_test = document.createElement('h2');
-        monthName_test.classList.add('monthName')
-
-        const calendar_header_test = document.createElement('div');
-        calendar_header_test.classList.add('calendar-header')
-        calendar_header_test.appendChild(monthName_test);
-
-        const month_test = document.createElement('div');
-        month_test.classList.add('month')
-        month_test.appendChild(calendar_header_test), month_test.appendChild(daysElement_test), month_test.appendChild(monthDays_test);
-
-        const calendar_test = document.createElement('div');
-        calendar_test.classList.add('calendar')
-        calendar_test.appendChild(month_test);
         // calendar_test.appendChild(month_test);
 
         // ==== 
@@ -210,25 +190,44 @@
         function renderCalendar() {
             date.setDate(1);
 
-            date.setMonth(0);//asigna el mes //Enero
+            for(let numMes = 0; numMes <= 11; numMes++) {
+            // CREAR VARIABLES  
+            const daysElement_test = document.createElement('div'); //*
+        daysElement_test.classList.add('days')
 
-            let lastDay_ = lastDay(0);
-            let prevLastDay_ = prevLastDay(0);
-            let lastDayIndex_ = lastDayIndex(0);
+        const monthDays_test = document.createElement('div');
+        monthDays_test.classList.add('calendar-body')
+        monthDays_test.appendChild(daysElement_test);
+        
+        const monthName_test = document.createElement('h2');
+        monthName_test.classList.add('monthName')
+
+        const calendar_header_test = document.createElement('div');
+        calendar_header_test.classList.add('calendar-header')
+        calendar_header_test.appendChild(monthName_test);
+
+        const month_test = document.createElement('div');
+        month_test.classList.add('month')
+        month_test.appendChild(calendar_header_test), month_test.appendChild(daysElement_test), month_test.appendChild(monthDays_test);
+
+        const calendar_test = document.createElement('div');
+        calendar_test.classList.add('calendar')
+        calendar_test.appendChild(month_test);
+            //
+
+            date.setMonth(numMes);//asigna el mes //Enero
+
+            let lastDay_ = lastDay(numMes);
+            let prevLastDay_ = prevLastDay(numMes);
+            let lastDayIndex_ = lastDayIndex(numMes);
 
             const firstDayIndex = date.getDay(); //imprime 0
 
 
             const nextDays = 7 - lastDayIndex_ - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
 
-
-            // monthName.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`; //imprime nombre del mes *-*
-            // daysElement.innerHTML = days.map(day => `<div>${day}</div>`).join(''); //imprime los dias de Dom a Sab *-*
-
             monthName_test.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`;
             daysElement_test.innerHTML = days.map(day => `<div>${day}</div>`).join('');
-
-
 
             let dates = '';
 
@@ -245,11 +244,11 @@
                 dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
             }
 
-            // monthDays.innerHTML = dates; //imprime los dias en el html (inserta) *-*
-
             monthDays_test.innerHTML = dates;
 
-            document.body.appendChild(calendar_test);
+            document.body.appendChild(calendar_test); //imprime al elemento padre
+
+        } //for
 
         }
 
