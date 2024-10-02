@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dias de descanso</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fff;
+        }
+
+        .calendar {
+            width: 100%;
+            height: 100vh;
+            margin: 2px;
+            background: #00f;
+
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 20px;
+
+            margin: 5px;
+
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            background-color: #333;
+            color: #fff;
+
+        }
+
+        .days {
+            display: flex;
+            /* justify-content: space-between; */
+            justify-content: space-around;
+            padding: 10px;
+            background: #333;
+            color: #fff;
+
+            div {
+                text-align: center;
+            }
+        }
+
+        .calendar-body {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1px;
+            background: #333;
+            transition: opacity .5s ease;
+            opacity: 1;
+
+            .fade-out {
+                opacity: 0;
+            }
+
+            div {
+                padding: 20px;
+                background: #fff;
+                text-align: center;
+            }
+
+            div.today {
+                background: rgb(255, 0, 0);
+                color: #fff;
+                /* opacity: .5; */
+            }
+
+            .descanso {
+                color: #fff;
+                background: blue;
+            }
+
+            .next-date {
+                opacity: 0.6;
+            }
+
+            .prev-date {
+                opacity: 0.6;
+            }
+        }
+
+        .change-month {
+            cursor: pointer;
+        }
+
+
+        form {
+            display: flex;
+            column-gap: 10px;
+        }
+
+        .calendar-body {
+            background: #0CA !important;
+            color: red;
+        }
+
+        .invisible {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="calendar">
+        <div class="month enero">
+            <div class="calendar-header">
+                <h2 class="monthName" id="monthName"></h2>
+            </div>
+            <div class="days" id="days"></div>
+            <div class="calendar-body" id="calendar-body"></div>
+        </div>
+    </div>
+
+    <script>
+
+        let date = new Date();
+        //enero
+        // const monthDays = document.getElementById('calendar-body'); //imprime los dias
+        // const monthName = document.getElementById('monthName'); //nombre del mes
+        // const daysElement = document.getElementById('days'); //imprime los dias dom - sab
+
+        // const calen = document.getElementsByClassName('calendar');
+  
+        
+        
+        
+
+        const daysElement_test = document.createElement('div'); //*
+        daysElement_test.classList.add('days')
+
+        const monthDays_test = document.createElement('div');
+        monthDays_test.classList.add('calendar-body')
+        monthDays_test.appendChild(daysElement_test);
+        
+        const monthName_test = document.createElement('h2');
+        monthName_test.classList.add('monthName')
+
+        const calendar_header_test = document.createElement('div');
+        calendar_header_test.classList.add('calendar-header')
+        calendar_header_test.appendChild(monthName_test);
+
+        const month_test = document.createElement('div');
+        month_test.classList.add('month')
+        month_test.appendChild(calendar_header_test), month_test.appendChild(daysElement_test), month_test.appendChild(monthDays_test);
+
+        const calendar_test = document.createElement('div');
+        calendar_test.classList.add('calendar')
+        calendar_test.appendChild(month_test);
+        // calendar_test.appendChild(month_test);
+
+        // ==== 
+        date.setMonth(0); // Se configura el mes enero
+
+        const months = [
+            'Enero',
+            'Febrero',
+            'Marzo',
+            'Abril',
+            'Mayo',
+            'Junio',
+            'Julio',
+            'Agosto',
+            'Septiembre',
+            'Octubre',
+            'Noviembre',
+            'Diciembre'
+        ];
+
+        const days = [
+            'DOM',
+            'LUN',
+            'MAR',
+            'MIE',
+            'JUE',
+            'VIE',
+            'SAB'
+        ];
+
+        //Ultimo Dia del mes
+        function lastDay(mes) {
+            date.setMonth(mes); // Se configura el mes enero
+            const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+            return lastDay;
+        }
+
+        //Ultimo Dia del mes anterior
+        function prevLastDay(mes) {
+            date.setMonth(mes); // Se configura el mes enero
+            const prevLastDay = new Date(date.getFullYear(), date.getMonth(), 0).getDate();
+            return prevLastDay;
+        }
+
+        // Obtiene el indice de los dia de la semana (Dom 0,lun 1, mar 2)
+        function lastDayIndex(mes) {
+            date.setMonth(mes); // Se configura el mes enero
+            const lastDayIndex = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDay();
+            return lastDayIndex;
+        }
+
+
+        function renderCalendar() {
+            date.setDate(1);
+
+            date.setMonth(0);//asigna el mes //Enero
+
+            let lastDay_ = lastDay(0);
+            let prevLastDay_ = prevLastDay(0);
+            let lastDayIndex_ = lastDayIndex(0);
+
+            const firstDayIndex = date.getDay(); //imprime 0
+
+
+            const nextDays = 7 - lastDayIndex_ - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
+
+
+            // monthName.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`; //imprime nombre del mes *-*
+            // daysElement.innerHTML = days.map(day => `<div>${day}</div>`).join(''); //imprime los dias de Dom a Sab *-*
+
+            monthName_test.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`;
+            daysElement_test.innerHTML = days.map(day => `<div>${day}</div>`).join('');
+
+
+
+            let dates = '';
+
+            //completa los dias finales del mes anterior
+            for (let x = firstDayIndex; x > 0; x--) {
+                dates += `<div class='prev-date'>${prevLastDay_ - x + 1}</div>`;
+            }
+
+            for (let i = 1; i <= lastDay_; i++) {
+                dates += `<div>${i}</div>` //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
+            }
+
+            for (let j = 1; j <= nextDays; j++) {
+                dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
+            }
+
+            // monthDays.innerHTML = dates; //imprime los dias en el html (inserta) *-*
+
+            monthDays_test.innerHTML = dates;
+
+            document.body.appendChild(calendar_test);
+
+        }
+
+        renderCalendar();
+
+
+        // function renderCalendar_1() {
+        //     date.setDate(1);
+
+        //     date.setMonth(1);//asigna el mes //Enero
+
+        //     let lastDay_ = lastDay(1);
+        //     let prevLastDay_ = prevLastDay(1);
+        //     let lastDayIndex_ = lastDayIndex(1);
+
+        //     const firstDayIndex = date.getDay(); //imprime 0
+
+
+        //     const nextDays = 7 - lastDayIndex_ - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
+
+
+        //     monthName_1.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`; //imprime nombre del mes *-*
+        //     daysElement_1.innerHTML = days.map(day => `<div>${day}</div>`).join(''); //imprime los dias de Dom a Sab *-*
+
+        //     let dates = '';
+
+        //     //completa los dias finales del mes anterior
+        //     for (let x = firstDayIndex; x > 0; x--) {
+        //         dates += `<div class='prev-date'>${prevLastDay_ - x + 1}</div>`;
+        //     }
+
+        //     for (let i = 1; i <= lastDay_; i++) {
+        //         dates += `<div>${i}</div>` //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes)
+        //     }
+
+        //     for (let j = 1; j <= nextDays; j++) {
+        //         dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
+        //     }
+
+        //     monthDays_1.innerHTML = dates; //imprime los dias en el html (inserta) *-*
+        // }
+
+        // renderCalendar_1();
+
+
+        // function renderCalendar_2() {
+        //     date.setDate(1);
+
+        //     date.setMonth(2);//asigna el mes //Enero
+
+        //     let lastDay_ = lastDay(2);
+        //     let prevLastDay_ = prevLastDay(2);
+        //     let lastDayIndex_ = lastDayIndex(2);
+
+        //     const firstDayIndex = date.getDay(); //imprime 0
+
+
+        //     const nextDays = 7 - lastDayIndex_ - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
+
+
+        //     monthName_2.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`; //imprime nombre del mes *-*
+        //     daysElement_2.innerHTML = days.map(day => `<div>${day}</div>`).join(''); //imprime los dias de Dom a Sab *-*
+
+        //     let dates = '';
+
+        //     //completa los dias finales del mes anterior
+        //     for (let x = firstDayIndex; x > 0; x--) {
+        //         dates += `<div class='prev-date'>${prevLastDay_ - x + 1}</div>`;
+        //     }
+
+        //     for (let i = 1; i <= lastDay_; i++) {
+        //         dates += `<div>${i}</div>` //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes)
+        //     }
+
+        //     for (let j = 1; j <= nextDays; j++) {
+        //         dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
+        //     }
+
+        //     monthDays_2.innerHTML = dates; //imprime los dias en el html (inserta) *-*
+        // }
+
+        // renderCalendar_2();
+
+
+    </script>
+</body>
+
+</html>
