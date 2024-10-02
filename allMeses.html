@@ -10,17 +10,22 @@
         body {
             font-family: Arial, sans-serif;
             background: #fff;
+            width: 100%;
+            height: 100vh;
+
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+
         }
 
         .calendar {
-            width: 100%;
-            height: 100vh;
+            /* width: 100%; */
+            /* height: 100vh; */
             margin: 2px;
-            background: #00f;
+            background: #0CA !important;
 
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 20px;
+
 
             margin: 5px;
 
@@ -129,12 +134,16 @@
         // const daysElement = document.getElementById('days'); //imprime los dias dom - sab
 
         // const calen = document.getElementsByClassName('calendar');
-  
-        
-        
-        
 
 
+        // let fecha = [
+        //     4, 0, 2024
+        // ];
+
+        let fecha = "1/4/2024"; //mes / dia/ año
+
+        let acumulador = new Date(fecha).getDate();
+        let validar = 0;
         // calendar_test.appendChild(month_test);
 
         // ==== 
@@ -164,6 +173,7 @@
             'VIE',
             'SAB'
         ];
+        // console.log(days[new Date(fecha).getDay()]);
 
         //Ultimo Dia del mes
         function lastDay(mes) {
@@ -190,147 +200,124 @@
         function renderCalendar() {
             date.setDate(1);
 
-            for(let numMes = 0; numMes <= 11; numMes++) {
-            // CREAR VARIABLES  
-            const daysElement_test = document.createElement('div'); //*
-        daysElement_test.classList.add('days')
-
-        const monthDays_test = document.createElement('div');
-        monthDays_test.classList.add('calendar-body')
-        monthDays_test.appendChild(daysElement_test);
-        
-        const monthName_test = document.createElement('h2');
-        monthName_test.classList.add('monthName')
-
-        const calendar_header_test = document.createElement('div');
-        calendar_header_test.classList.add('calendar-header')
-        calendar_header_test.appendChild(monthName_test);
-
-        const month_test = document.createElement('div');
-        month_test.classList.add('month')
-        month_test.appendChild(calendar_header_test), month_test.appendChild(daysElement_test), month_test.appendChild(monthDays_test);
-
-        const calendar_test = document.createElement('div');
-        calendar_test.classList.add('calendar')
-        calendar_test.appendChild(month_test);
-            //
-
-            date.setMonth(numMes);//asigna el mes //Enero
-
-            let lastDay_ = lastDay(numMes);
-            let prevLastDay_ = prevLastDay(numMes);
-            let lastDayIndex_ = lastDayIndex(numMes);
-
-            const firstDayIndex = date.getDay(); //imprime 0
 
 
-            const nextDays = 7 - lastDayIndex_ - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
 
-            monthName_test.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`;
-            daysElement_test.innerHTML = days.map(day => `<div>${day}</div>`).join('');
+            for (let numMes = 0; numMes <= 11; numMes++) {
+                // CREAR VARIABLES  
+                const daysElement_test = document.createElement('div'); //*
+                daysElement_test.classList.add('days')
 
-            let dates = '';
+                const monthDays_test = document.createElement('div');
+                monthDays_test.classList.add('calendar-body')
+                monthDays_test.appendChild(daysElement_test);
 
-            //completa los dias finales del mes anterior
-            for (let x = firstDayIndex; x > 0; x--) {
-                dates += `<div class='prev-date'>${prevLastDay_ - x + 1}</div>`;
-            }
+                const monthName_test = document.createElement('h2');
+                monthName_test.classList.add('monthName')
 
-            for (let i = 1; i <= lastDay_; i++) {
-                dates += `<div>${i}</div>` //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
-            }
+                const calendar_header_test = document.createElement('div');
+                calendar_header_test.classList.add('calendar-header')
+                calendar_header_test.appendChild(monthName_test);
 
-            for (let j = 1; j <= nextDays; j++) {
-                dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
-            }
+                const month_test = document.createElement('div');
+                month_test.classList.add('month')
+                month_test.appendChild(calendar_header_test), month_test.appendChild(daysElement_test), month_test.appendChild(monthDays_test);
 
-            monthDays_test.innerHTML = dates;
+                const calendar_test = document.createElement('div');
+                calendar_test.classList.add('calendar')
+                calendar_test.appendChild(month_test);
+                //
 
-            document.body.appendChild(calendar_test); //imprime al elemento padre
+                date.setMonth(numMes);//asigna el mes //Enero
 
-        } //for
+
+                let lastDay_ = lastDay(numMes);
+                let prevLastDay_ = prevLastDay(numMes);
+                let lastDayIndex_ = lastDayIndex(numMes);
+
+                const firstDayIndex = date.getDay(); //imprime 0
+
+                const nextDays = 7 - lastDayIndex_ - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
+
+                monthName_test.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`;
+                daysElement_test.innerHTML = days.map(day => `<div>${day}</div>`).join('');
+
+                let dates = '';
+
+                //completa los dias finales del mes anterior
+                for (let x = firstDayIndex; x > 0; x--) {
+                    dates += `<div class='prev-date'>${prevLastDay_ - x + 1}</div>`;
+                }
+
+                for (let i = 1; i <= lastDay_; i++) {
+                    // if(fecha.length > 0 && fecha[0] === i && fecha[1] === numMes) {
+                    //     dates += `<div class="descanso">${i}</div>`;
+                    // }
+                    let fechaAux = new Date(date.getFullYear() +'/'+ (date.getMonth() + 1) +'/'+ i);
+                    // console.log(date.getFullYear() + " -> " + months[(date.getMonth())] + " -> " + i);
+                    
+                    if (acumulador === i && new Date(fecha).getMonth() === numMes) {
+                        // console.log(fechaAux.getDate());
+
+
+                        // console.log(fechaAux);
+                        dates += `<div class="descanso">${i}</div>`;
+                        acumulador += 8;
+
+                        if (acumulador > lastDay_) {
+                            acumulador -= lastDay_;
+                        }
+
+
+                    }
+
+                    else {
+                        if (acumulador > 0) {
+  
+                            if (i === acumulador) {
+
+                                if(fechaAux.getDay() === 2) {
+                                    console.log(fechaAux + " -> " + fechaAux.getDay())
+                                    validar = 1;
+                                }
+ 
+                                dates += `<div class="descanso">${i}</div>`;
+                                acumulador += 8;
+                                
+                                if (acumulador > lastDay_) {
+                                    acumulador -= lastDay_;
+                                }
+                            }
+                            else {
+
+                                if(validar > 0 && fechaAux.getDay() === 3){
+                                dates += `<div class="descanso">${i}</div>`;
+                                acumulador += 1;
+                                validar = 0;
+                                }else {
+
+                                    dates += `<div>${i}</div>`; //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+
+                for (let j = 1; j <= nextDays; j++) {
+                    dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
+                }
+
+                monthDays_test.innerHTML = dates;
+
+                document.body.appendChild(calendar_test); //imprime al elemento padre
+
+            } //for
 
         }
 
         renderCalendar();
-
-
-        // function renderCalendar_1() {
-        //     date.setDate(1);
-
-        //     date.setMonth(1);//asigna el mes //Enero
-
-        //     let lastDay_ = lastDay(1);
-        //     let prevLastDay_ = prevLastDay(1);
-        //     let lastDayIndex_ = lastDayIndex(1);
-
-        //     const firstDayIndex = date.getDay(); //imprime 0
-
-
-        //     const nextDays = 7 - lastDayIndex_ - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
-
-
-        //     monthName_1.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`; //imprime nombre del mes *-*
-        //     daysElement_1.innerHTML = days.map(day => `<div>${day}</div>`).join(''); //imprime los dias de Dom a Sab *-*
-
-        //     let dates = '';
-
-        //     //completa los dias finales del mes anterior
-        //     for (let x = firstDayIndex; x > 0; x--) {
-        //         dates += `<div class='prev-date'>${prevLastDay_ - x + 1}</div>`;
-        //     }
-
-        //     for (let i = 1; i <= lastDay_; i++) {
-        //         dates += `<div>${i}</div>` //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes)
-        //     }
-
-        //     for (let j = 1; j <= nextDays; j++) {
-        //         dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
-        //     }
-
-        //     monthDays_1.innerHTML = dates; //imprime los dias en el html (inserta) *-*
-        // }
-
-        // renderCalendar_1();
-
-
-        // function renderCalendar_2() {
-        //     date.setDate(1);
-
-        //     date.setMonth(2);//asigna el mes //Enero
-
-        //     let lastDay_ = lastDay(2);
-        //     let prevLastDay_ = prevLastDay(2);
-        //     let lastDayIndex_ = lastDayIndex(2);
-
-        //     const firstDayIndex = date.getDay(); //imprime 0
-
-
-        //     const nextDays = 7 - lastDayIndex_ - 1; //imprime 5 dias faltantes para terminar la semana pte x verificar
-
-
-        //     monthName_2.innerText = `${months[date.getMonth()]} ${date.getFullYear()}`; //imprime nombre del mes *-*
-        //     daysElement_2.innerHTML = days.map(day => `<div>${day}</div>`).join(''); //imprime los dias de Dom a Sab *-*
-
-        //     let dates = '';
-
-        //     //completa los dias finales del mes anterior
-        //     for (let x = firstDayIndex; x > 0; x--) {
-        //         dates += `<div class='prev-date'>${prevLastDay_ - x + 1}</div>`;
-        //     }
-
-        //     for (let i = 1; i <= lastDay_; i++) {
-        //         dates += `<div>${i}</div>` //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes)
-        //     }
-
-        //     for (let j = 1; j <= nextDays; j++) {
-        //         dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
-        //     }
-
-        //     monthDays_2.innerHTML = dates; //imprime los dias en el html (inserta) *-*
-        // }
-
-        // renderCalendar_2();
 
 
     </script>
