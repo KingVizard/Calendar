@@ -14,21 +14,16 @@
             height: 100vh;
 
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
+            justify-items: center;
             gap: 10px;
 
+            margin: 20px 0px;
         }
 
         .calendar {
-            /* width: 100%; */
-            /* height: 100vh; */
-            margin: 2px;
             background: #0CA !important;
-
-
-
-            margin: 5px;
-
+            width: 90%;
         }
 
         .calendar-header {
@@ -38,12 +33,10 @@
             padding: 10px;
             background-color: #333;
             color: #fff;
-
         }
 
         .days {
             display: flex;
-            /* justify-content: space-between; */
             justify-content: space-around;
             padding: 10px;
             background: #333;
@@ -83,6 +76,11 @@
                 background: blue;
             }
 
+            .special {
+                background: #e87a48;
+                color: #fff;
+            }
+
             .next-date {
                 opacity: 0.6;
             }
@@ -110,35 +108,17 @@
         .invisible {
             display: none;
         }
+
     </style>
 </head>
 
 <body>
 
-    <!-- <div class="calendar">
-        <div class="month enero">
-            <div class="calendar-header">
-                <h2 class="monthName" id="monthName"></h2>
-            </div>
-            <div class="days" id="days"></div>
-            <div class="calendar-body" id="calendar-body"></div>
-        </div>
-    </div> -->
+
 
     <script>
 
         let date = new Date();
-        //enero
-        // const monthDays = document.getElementById('calendar-body'); //imprime los dias
-        // const monthName = document.getElementById('monthName'); //nombre del mes
-        // const daysElement = document.getElementById('days'); //imprime los dias dom - sab
-
-        // const calen = document.getElementsByClassName('calendar');
-
-
-        // let fecha = [
-        //     4, 0, 2024
-        // ];
 
         let fecha = "1/4/2024"; //mes / dia/ año
 
@@ -253,9 +233,9 @@
                     // if(fecha.length > 0 && fecha[0] === i && fecha[1] === numMes) {
                     //     dates += `<div class="descanso">${i}</div>`;
                     // }
-                    let fechaAux = new Date(date.getFullYear() +'/'+ (date.getMonth() + 1) +'/'+ i);
+                    let fechaAux = new Date(date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + i);
                     // console.log(date.getFullYear() + " -> " + months[(date.getMonth())] + " -> " + i);
-                    
+
                     if (acumulador === i && new Date(fecha).getMonth() === numMes) {
                         // console.log(fechaAux.getDate());
 
@@ -273,29 +253,32 @@
 
                     else {
                         if (acumulador > 0) {
-  
+
                             if (i === acumulador) {
 
-                                if(fechaAux.getDay() === 2) {
-                                    console.log(fechaAux + " -> " + fechaAux.getDay())
+                                if (fechaAux.getDay() === 2) {
+                                    // console.log(fechaAux + " -> " + fechaAux.getDay())
                                     validar = 1;
+                                    dates += `<div class="special">${i}</div>`;
                                 }
- 
-                                dates += `<div class="descanso">${i}</div>`;
-                                acumulador += 8;
-                                
-                                if (acumulador > lastDay_) {
-                                    acumulador -= lastDay_;
-                                }
+                                else {
+
+                                    dates += `<div class="descanso">${i}</div>`;
+                                    
+                                    } 
+                                    acumulador += 8;
+                                    
+                                    if (acumulador > lastDay_) {
+                                        acumulador -= lastDay_;
+                                    }
                             }
                             else {
 
-                                if(validar > 0 && fechaAux.getDay() === 3){
-                                dates += `<div class="descanso">${i}</div>`;
-                                acumulador += 1;
-                                validar = 0;
-                                }else {
-
+                                if (validar > 0 && fechaAux.getDay() === 3) {
+                                    dates += `<div class="special">${i}</div>`;
+                                    acumulador += 1;
+                                    validar = 0;
+                                } else {
                                     dates += `<div>${i}</div>`; //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
                                 }
 
