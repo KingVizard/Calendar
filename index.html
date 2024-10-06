@@ -112,13 +112,14 @@
 
 
         <!-- <button></button> -->
-        <!-- <form>
+        <form>
             <input id="id">
 
             <p><Input type="text" placeholder="ingresar Nombre" minlength="5" id="usuarioInp"></Input></p>
             <p><Input type="number" max="30" min="1" id="fechaInp"></Input></p>
             <input type="button" value="Guardar" id="btnGuardar">
-        </form> -->
+            <input type="button" value="Mostrar" id="btnMostrar">
+        </form>
 
         <div id="calendar-header">
             <span id="month-prev" class="change-month">&lt;</span>
@@ -140,81 +141,105 @@
 
     <script>
 
-        let fullFecha;
-        // Crear una fecha
-        const fecha2 = new Date(2024, 8, 13);
 
-        let validar = 0;
-        let mesAtras;
-        let mesAdelante;
 
-        let ultimoDiaMes = 0;
-        let operacionDiasFinal = 0;
-        let fechaDeReferencia = new Date(0);
+    </script>
 
-        //---------------------------
+    <!-- <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script> -->
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+        import { getDatabase, ref, push, set, get, child, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJs0AOQGlEkBHZK8qlD41UYeAzt0Z3IKs",
+            authDomain: "calendario-77272.firebaseapp.com",
+            databaseURL: "https://calendario-77272-default-rtdb.firebaseio.com",
+            projectId: "calendario-77272",
+            storageBucket: "calendario-77272.appspot.com",
+            messagingSenderId: "1093703020386",
+            appId: "1:1093703020386:web:478943a7d6b73014d3c63b"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+
+
+        const dbRef = ref(database, 'usuarios');  //nombre de la coleccion
+
+        const nuevaRef = push(dbRef);
+
+        var dataset = [];
+
+        let usuario = document.getElementById('usuarioInp');
+        let fecha = document.getElementById('fechaInp');
+        let btnGuardar = document.getElementById('btnGuardar');
+        let btnMostrar = document.getElementById('btnMostrar');
+        let abc = 0;
+
+        function writeData() {
+            set(nuevaRef, {
+                usuario: usuario.value,
+                fecha: fecha.value
+
+            })
+                .then(() => {
+                    console.log("Datos guardados correctamente.");
+                })
+                .catch((error) => {
+                    console.error("Error al guardar los datos:", error);
+                });
+        }
+
+        // Función para leer datos de la base de datos
+        function readData() {
+            const dbRef = ref(database);
+            get(child(dbRef, "usuarios")) //nombre de la coleccion
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+
+                        snapshot.forEach(childSnapshot => {
+                            let fecha_val = snapshot;
+                            const childKey = childSnapshot.key; // Este es el ID del dato
+                            const childData = childSnapshot.child("fecha").val();
+                            // console.log("ID:", childKey, "Datos:", childData);
+                            abc = childData - 1;
+                            console.log(parseInt(childData) + 2);
+
+                            // console.log("fecha: ", childDataV2);
+                        });
+                    } else {
+                        console.log("No hay datos disponibles.");
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error al leer los datos:", error);
+                });
+        }
+
+
+        // ----
+        btnGuardar.addEventListener("click", function () {
+
+            writeData();
+            // readData();
+
+        });
+
+        btnMostrar.addEventListener("click", function () {
+            readData();
+        })
+
+
+        // ****************--------------------
+
         let fechaInicio = 5;
-        let incrementador = 0;
-        let decrementador = 0;
-        let apuntadorProxMes = 0;
-        let apuntadorMesAnterior = 0;
-        let mesReferencia = 0;
-        let martes = 0;
-        let miercoles = 0;
-        let fechaFinal = 29;
-        let obtencionValorMesAnterior = 0;
-
-        let numeroIncialReferencia = 0;
-
-
-        let restaMes = 0;
-        let sumaMes = 0;
-
-        let fechaNueva = new Date();
-
-        let fechaAux = 1;
-        //---------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //Nuevas Variables
 
         let diaIncial = 5;
-        let acumuladorMesActual = 0;
-
-        let MesEnfocado = 1;
-
-
-
-        //Nuevas Variables
-
-
-
-
-
 
         let date = new Date();
 
@@ -285,146 +310,9 @@
                 dates += `<div class='prev-date'>${prevLastDay - x + 1}</div>`;
             }
 
-            //Impresion de los dias del mes que se ve
-            incrementador = fechaInicio;
-
-            // console.log(diaIncial)
-            acumuladorMesActual = diaIncial;
             for (let i = 1; i <= lastDay; i++) {
                 dates += `<div>${i}</div>` //resto de dias del mes actual
 
-                // [ MES ACTUAL ]
-                // if (date.getMonth() === new Date().getMonth() && date.getFullYear() === new Date().getFullYear()) {
-                //     // DETERMINA EL DIA DE HOY
-                //     if (i === new Date().getDate() && i != acumuladorMesActual) {
-                //         dates += `<div class="today">${i}</div>`;
-                //     }
-
-                //     // DETERMINA LOS DIAS DE DESCANSO
-                //     else if (acumuladorMesActual > 0) {
-                //         if (i === acumuladorMesActual) {
-                //             dates += `<div class="descanso">${i}</div>`;
-                //             acumuladorMesActual += 8;
-
-                //             if (acumuladorMesActual > lastDay) {
-                //                 apuntadorProxMes = acumuladorMesActual - lastDay;
-                //                 console.log(apuntadorProxMes)
-                //             }
-                //         }
-                //         else {
-                //             dates += `<div>${i}</div>` //resto de dias del mes actual
-                //         }
-                //     }
-                // }
-
-
-                // else {
-                //     // if (apuntadorProxMes > 0) {
-                //     //     if (i === apuntadorProxMes) {
-                //     //         dates += `<div class="descanso">${i}</div>`;
-                //     //         apuntadorProxMes += 8;
-                //     //     }else {
-
-                //     //     }
-                //     // }
-                //     dates += `<div>${i}</div>` //dias del resto de meses
-                // }
-
-
-                // --------DIAS DEL MES ACTUAL-------------
-                // if (date.getMonth() === new Date().getMonth() &&
-                //     date.getFullYear() === new Date().getFullYear()) {
-                //     mesReferencia = date.getMonth();
-
-                //     if (i === new Date().getDate() && i != incrementador) {
-                //         dates += `<div class="today">${i}</div>`; //dia actual (hoy) 
-                //     }
-                //     else if (fechaInicio > 0) {
-
-                //         if (incrementador === i) {
-
-                //             dates += `<div class="descanso">${i}</div>`;
-
-                //             console.log(incrementador)
-                //             incrementador += 8;
-
-                //             if (incrementador > lastDay) {
-                //                 apuntadorProxMes = incrementador - lastDay;
-                //                 // console.log(apuntadorProxMes)
-                //             }
-                //         }
-                //         else {
-
-                //             dates += `<div>${i}</div>` //dias del mes actual
-                //         }
-                //     }
-
-                // }
-                // else {
-
-
-                //     if (sumaMes > 0) {
-                //         console.log(apuntadorProxMes);
-                //         if (apuntadorProxMes > 0) {
-
-
-                //             if (fechaAux <= 1) {
-                //                 fechaAux = apuntadorProxMes;
-                //                 numeroIncialReferencia = apuntadorProxMes;
-                //             }
-
-                //             let ObtenerFecha = fechaNueva.getFullYear() + '/' + (date.getMonth() + 1) + '/' + fechaAux;
-
-                //             martes = new Date(ObtenerFecha);
-
-
-                //             if (fechaAux === i) {
-
-                //                 if (martes.getDay() === 2) {
-                //                     miercoles = 1;
-                //                 }
-
-                //                 dates += `<div class="descanso">${i}</div>`;
-
-                //                 fechaAux += 8;
-
-                //                 if (fechaAux > lastDay) {
-                //                     apuntadorProxMes = fechaAux - lastDay;
-                //                     fechaAux = 0;
-                //                 }
-
-                //             }
-
-                //             else {
-                //                 if (miercoles > 0) {
-                //                     dates += `<div class="descanso">${i}</div>`;
-                //                     miercoles = 0;
-                //                     fechaAux += 1;
-                //                 }
-                //                 else {
-
-                //                     dates += `<div>${i}</div>` //dias del mes actual
-                //                 }
-
-                //             }
-
-                //         } else {
-
-                //         }
-                //     }
-
-
-                //     if (restaMes > 0) {
-
-                //         console.log(numeroIncialReferencia)
-                //         if(numeroIncialReferencia > 0) {
-                //         }
-                //         else {
-
-                //             dates += `<div>${i}</div>` //dias del mes actual
-                //         }
-                //     }
-                // }
             }
 
             for (let j = 1; j <= nextDays; j++) {
@@ -463,197 +351,10 @@
         });
 
         renderCalendar();
-
-
+        // ****************--------------------
 
     </script>
 
-    <!-- <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script>
-
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
-        import { getDatabase, ref, push, set, get, child, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyCJs0AOQGlEkBHZK8qlD41UYeAzt0Z3IKs",
-            authDomain: "calendario-77272.firebaseapp.com",
-            databaseURL: "https://calendario-77272-default-rtdb.firebaseio.com",
-            projectId: "calendario-77272",
-            storageBucket: "calendario-77272.appspot.com",
-            messagingSenderId: "1093703020386",
-            appId: "1:1093703020386:web:478943a7d6b73014d3c63b"
-        };
-
-        firebase.initializeApp(config);
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-
-
-        const dbRef = ref(database, 'usuarios');  //nombre de la coleccion
-        // const dbRef = ref(database, 'usuarios/');  //nombre de la coleccion
-        const nuevaRef = push(dbRef);
-        // const nuevaRef = get(dbRef);
-        var dataset = [];
-        // coleccionProduccion = database.ref().child('produccion');
-        // const referencia = ref(database, 'tu_ruta');
-        // const nuevoReferencia = push(referencia);
-
-        // let id = document.getElementById('id');
-        let usuario = document.getElementById('usuarioInp');
-        let fecha = document.getElementById('fechaInp');
-        let btnGuardar = document.getElementById('btnGuardar');
-        let btnMostrar = document.getElementById('btnMostrar');
-        // let idFirebase = 
-
-        // Función para escribir datos en la base de datos
-        // ColeccionUsuarios = database.ref().child('Usuarios');
-        //const dbRef = ref(database, 'usuarios/');  //nombre de la coleccion
-
-
-        // nuevaRef.on('child_changed', data => {
-        //     dataset = [data.key, data.child("usuario").val()];
-        //     console.log(dataset)
-        // })
-
-
-        function writeData() {
-            // set(nuevaRef, {
-            //     usuario: usuario.value,
-            //     fecha: fecha.value
-
-            // })
-            //     .then(() => {
-            //         console.log("Datos guardados correctamente.");
-            //     })
-            //     .catch((error) => {
-            //         console.error("Error al guardar los datos:", error);
-            //     });
-
-
-            const nuevaRef = dbRef.push();
-            nuevaRef.set({
-                usuario: usuario.value,
-                fecha: fecha.value
-            });
-
-        }
-
-        // user = 'Gato';
-
-        // async function obtenerUsuarios() {
-        //     const consulta = query(dbRef, orderByChild("usuario"));
-
-        //     try {
-        //         const snapshot = await get(consulta);
-        //         if (snapshot.exists()) {
-        //             console.log(snapshot.val());
-        //         } else {
-        //             console.log("No se encontraron usuarios con esa edad.");
-        //         }
-        //     } catch (error) {
-        //         console.error("Error al obtener los datos: ", error);
-        //     }
-        // }
-
-        // obtenerUsuarios('Pablo')
-
-        // Función para leer datos de la base de datos
-        function readData() {
-            // const dbRef = ref(database);
-            // get(child(dbRef, "usuarios")) //nombre de la coleccion
-            //     .then((snapshot) => {
-            //         if (snapshot.exists()) {
-            //             console.log("Datos leídos:", snapshot.val());
-            //             // let test = snapshot;
-            //             // console.log("Datos leídos:", test.child("usuario").val());
-            //         } else {
-            //             console.log("No hay datos disponibles.");
-            //         }
-            //     })
-            //     .catch((error) => {
-            //         console.error("Error al leer los datos:", error);
-            //     });
-
-            // const dbRef = firebase.database()
-            //.ref('usuarios');
-            // dbRef.orderByChild('usuario')
-            //.once('value').then(snapshot => {
-            //     snapshot.forEach(childSnapshot => {
-            //         console.log(childSnapshot.val());
-            //     });
-            // });
-
-            // const dbRef = ref(database, 'usuarios');
-            const dbRef = firebase.database()
-            .once(dbRef, 'usuario')
-            .then((snapshot) => {
-                const data = snapshot.val();
-                console.log(data);
-            });
-        }
-
-
-        // dbRef = firebase.database().ref('usuarios');
-
-
-
-
-        // ----
-        btnGuardar.addEventListener("click", function () {
-
-            writeData();
-            // readData();
-
-        });
-
-        btnMostrar.addEventListener("click", function () {
-            readData();
-        })
-
-
-
-
-
-        // function crearUsuario(usuario) {
-        //     const nuevoUsuarioRef = database.ref('usuarios').push();
-        //     nuevoUsuarioRef.set(usuario);
-        // }
-
-        // function leerUsuarios() {
-        //     database.ref('usuarios').on('value', (snapshot) => {
-        //         const usuarios = snapshot.val();
-        //         console.log(usuarios);
-        //     });
-        // }
-
-        // function actualizarUsuario(id, nuevosDatos) {
-        //     database.ref('usuarios/' + id).update(nuevosDatos);
-        // }
-
-        // function eliminarUsuario(id) {
-        //     database.ref('usuarios/' + id).remove();
-        // }
-
-
-        // crearUsuario(usuario)
-
-        // document.addEventListener("DOMContentLoaded", function () {
-        //     const lista = document.getElementById("listViewUsers");
-        //     const items = ["Elemento 1", "Elemento 2", "Elemento 3"];
-
-        //     items.forEach(function (item) {
-        //         const li = document.createElement("li");
-        //         li.textContent = item;
-        //         lista.appendChild(li);
-        //     });
-        // });
-    </script> -->
-
-    <!-- <script src="https://www.gstatic.com/firebasejs/7.15.0/firebase.js"></script> -->
 
 </body>
 

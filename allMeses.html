@@ -21,16 +21,10 @@
             height: 100vh;
 
             display: grid;
-            /* grid-template-columns: repeat(2, 1fr); */
             grid-template-columns: repeat(2, 1fr);
 
             justify-items: center;
-            gap: 20px;
-
-            /* display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-             */
+            gap: 15px;
 
             margin: 20px 0px;
         }
@@ -134,7 +128,13 @@
 
 <body>
 
+ <form>
+            <input id="id">
 
+            <p><Input type="text" placeholder="ingresar Nombre" minlength="5" id="usuarioInp"></Input></p>
+            <p><Input type="number" max="30" min="1" id="fechaInp"></Input></p>
+            <input type="button" value="Guardar" id="btnGuardar">
+        </form>
 
     <script>
 
@@ -144,7 +144,6 @@
 
         let acumulador = new Date(fecha).getDate();
         let validar = 0;
-        // calendar_test.appendChild(month_test);
 
         // ==== 
         date.setMonth(0); // Se configura el mes enero
@@ -173,7 +172,6 @@
             'VIE',
             'SAB'
         ];
-        // console.log(days[new Date(fecha).getDay()]);
 
         //Ultimo Dia del mes
         function lastDay(mes) {
@@ -199,9 +197,6 @@
 
         function renderCalendar() {
             date.setDate(1);
-
-
-
 
             for (let numMes = 0; numMes <= 11; numMes++) {
                 // CREAR VARIABLES  
@@ -250,25 +245,17 @@
                 }
 
                 for (let i = 1; i <= lastDay_; i++) {
-                    // if(fecha.length > 0 && fecha[0] === i && fecha[1] === numMes) {
-                    //     dates += `<div class="descanso">${i}</div>`;
-                    // }
+                   
                     let fechaAux = new Date(date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + i);
-                    // console.log(date.getFullYear() + " -> " + months[(date.getMonth())] + " -> " + i);
 
                     if (acumulador === i && new Date(fecha).getMonth() === numMes) {
-                        // console.log(fechaAux.getDate());
 
-
-                        // console.log(fechaAux);
                         dates += `<div class="descanso">${i}</div>`;
                         acumulador += 8;
 
                         if (acumulador > lastDay_) {
                             acumulador -= lastDay_;
                         }
-
-
                     }
 
                     else {
@@ -277,7 +264,6 @@
                             if (i === acumulador) {
 
                                 if (fechaAux.getDay() === 2) {
-                                    // console.log(fechaAux + " -> " + fechaAux.getDay())
                                     validar = 1;
                                     dates += `<div class="special">${i}</div>`;
                                 }
@@ -324,6 +310,105 @@
 
 
     </script>
+
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+    import { getDatabase, ref, push, set, get, child, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyCJs0AOQGlEkBHZK8qlD41UYeAzt0Z3IKs",
+        authDomain: "calendario-77272.firebaseapp.com",
+        databaseURL: "https://calendario-77272-default-rtdb.firebaseio.com",
+        projectId: "calendario-77272",
+        storageBucket: "calendario-77272.appspot.com",
+        messagingSenderId: "1093703020386",
+        appId: "1:1093703020386:web:478943a7d6b73014d3c63b"
+    };
+
+    firebase.initializeApp(config);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+
+
+    const dbRef = ref(database, 'usuarios');  //nombre de la coleccion
+    const nuevaRef = push(dbRef);
+    var dataset = [];
+
+    let usuario = document.getElementById('usuarioInp');
+    let fechaDescanso = document.getElementById('fechaInp');
+    let btnGuardar = document.getElementById('btnGuardar');
+    let btnMostrar = document.getElementById('btnMostrar');
+
+    function writeData() {
+        const nuevaRef = dbRef.push();
+        nuevaRef.set({
+            usuario: usuario.value,
+            fecha: fechaDescanso.value
+        });
+
+    }
+
+    // Función para leer datos de la base de datos
+    function readData() {
+        // const dbRef = ref(database);
+        // get(child(dbRef, "usuarios")) //nombre de la coleccion
+        //     .then((snapshot) => {
+        //         if (snapshot.exists()) {
+        //             console.log("Datos leídos:", snapshot.val());
+        //             // let test = snapshot;
+        //             // console.log("Datos leídos:", test.child("usuario").val());
+        //         } else {
+        //             console.log("No hay datos disponibles.");
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error al leer los datos:", error);
+        //     });
+
+        // const dbRef = firebase.database()
+        //.ref('usuarios');
+        // dbRef.orderByChild('usuario')
+        //.once('value').then(snapshot => {
+        //     snapshot.forEach(childSnapshot => {
+        //         console.log(childSnapshot.val());
+        //     });
+        // });
+
+        // const dbRef = ref(database, 'usuarios');
+        const dbRef = firebase.database()
+        .once(dbRef, 'usuario')
+        .then((snapshot) => {
+            const data = snapshot.val();
+            console.log(data);
+        });
+    }
+
+
+    // dbRef = firebase.database().ref('usuarios');
+
+
+
+
+    // ----
+    btnGuardar.addEventListener("click", function () {
+
+        writeData();
+        // readData();
+
+    });
+
+    btnMostrar.addEventListener("click", function () {
+        readData();
+    })
+
+
+</script> 
+
 </body>
 
 </html>
