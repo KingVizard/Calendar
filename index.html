@@ -203,14 +203,12 @@
                     if (snapshot.exists()) {
 
                         snapshot.forEach(childSnapshot => {
-                            let fecha_val = snapshot;
                             const childKey = childSnapshot.key; // Este es el ID del dato
-                            const childData = childSnapshot.child("fecha").val();
-                            // console.log("ID:", childKey, "Datos:", childData);
-                            abc = childData - 1;
-                            console.log(parseInt(childData) + 2);
+                            const childFecha = childSnapshot.child("fecha").val(); // contiene las fechas
+                            const childUsuario = childSnapshot.child("usuario").val(); // contiene las fechas
+                            const data = childSnapshot.val(); // contiene todos los valores
 
-                            // console.log("fecha: ", childDataV2);
+                            console.log(childUsuario);
                         });
                     } else {
                         console.log("No hay datos disponibles.");
@@ -224,16 +222,12 @@
 
         // ----
         btnGuardar.addEventListener("click", function () {
-
             writeData();
-            // readData();
-
         });
 
         btnMostrar.addEventListener("click", function () {
             readData();
         })
-
 
         // ****************--------------------
 
@@ -304,51 +298,82 @@
             daysElement.innerHTML = days.map(day => `<div>${day}</div>`).join(''); //imprime los dias de Dom a Sab
 
             let dates = '';
-
+            let childData = 0;
             //completa los dias finales del mes anterior
             for (let x = firstDayIndex; x > 0; x--) {
                 dates += `<div class='prev-date'>${prevLastDay - x + 1}</div>`;
             }
 
+            // ********************
+            const dbRef = ref(database);
+            // ********************
             for (let i = 1; i <= lastDay; i++) {
-                dates += `<div>${i}</div>` //resto de dias del mes actual
+                //dates += `<div>${i}</div>`; // dias sin modificar
+                get(child(dbRef, "usuarios")) //nombre de la coleccion
+                    .then((snapshot) => {
+                        if (snapshot.exists()) {
 
+                            snapshot.forEach(childSnapshot => {
+                                const childKey = childSnapshot.key; // Este es el ID del dato
+                                const childFecha = childSnapshot.child("fecha").val(); // contiene las fechas
+                                const childUsuario = childSnapshot.child("usuario").val(); // contiene las fechas
+                                const data = childSnapshot.val(); // contiene todos los valores
+
+                                if (i === parseInt(childFecha)) {
+                                    dates += `<div class="descanso">${i}</div>`; // dias sin modificar
+                                    // console.log(childFecha + " --> " + `<div class="descanso">${i}</div>`);
+                                } else {
+                                    dates += `<div>${i}</div>`; // dias sin modificar
+
+                                }
+
+                                console.log("dentro foreach" + " - " + childFecha);
+                            });
+                            // console.log("FUERA foreach" + data);
+                        } else {
+                            console.log("No hay datos disponibles.");
+                        }
+                        monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
+                    })
+                    .catch((error) => {
+                        console.error("Error al leer los datos:", error);
+                    });
             }
 
             for (let j = 1; j <= nextDays; j++) {
                 dates += `<div class="next-date">${j}</div>`; //dias del proximo mes en la misma pantalla
             }
 
-            monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
+            // monthDays.innerHTML = dates; //imprime los dias en el html (inserta)
         }
 
-        document.getElementById('month-prev').addEventListener('click', () => {
-            document.getElementById('calendar-body').classList.add('fade-out');
-            setTimeout(() => {
-                date.setMonth(date.getMonth() - 1); //asigna el mes
+        // document.getElementById('month-prev').addEventListener('click', () => {
+        //     document.getElementById('calendar-body').classList.add('fade-out');
+        //     setTimeout(() => {
+        //         date.setMonth(date.getMonth() - 1); //asigna el mes
 
 
-                restaMes = 1;
+        //         restaMes = 1;
 
-                renderCalendar();
+        //         renderCalendar();
 
-                restaMes = 0;
-                document.getElementById('calendar-body').classList.remove('fade-out');
-            }, 500);
-        });
+        //         restaMes = 0;
+        //         document.getElementById('calendar-body').classList.remove('fade-out');
+        //     }, 500);
+        // });
 
-        document.getElementById('month-next').addEventListener('click', () => {
-            document.getElementById('calendar-body').classList.add('fade-out');
-            setTimeout(() => {
-                date.setMonth(date.getMonth() + 1);//asigna el mes
+        // document.getElementById('month-next').addEventListener('click', () => {
+        //     document.getElementById('calendar-body').classList.add('fade-out');
+        //     setTimeout(() => {
+        //         date.setMonth(date.getMonth() + 1);//asigna el mes
 
-                sumaMes = 1;
+        //         sumaMes = 1;
 
-                renderCalendar();
-                sumaMes = 0;
-                document.getElementById('calendar-body').classList.remove('fade-out');
-            }, 500);
-        });
+        //         renderCalendar();
+        //         sumaMes = 0;
+        //         document.getElementById('calendar-body').classList.remove('fade-out');
+        //     }, 500);
+        // });
 
         renderCalendar();
         // ****************--------------------
