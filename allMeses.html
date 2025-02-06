@@ -141,6 +141,7 @@
         // VARIABLES PARA DETERMINAR EL PRIMER DIA DE DESCANSO DEL AÑO, APARTIR DE LA FECHA ACTUAL DE DESCANSO
         // ---------------
         let fechaDescansoActual = "10/4/2024";
+        // let fechaDescansoActual = "2/7/2025";
         let fechaParaTrabajar = new Date(fechaDescansoActual);
         let dia = fechaParaTrabajar.getDate();
         // let 
@@ -150,7 +151,8 @@
 
         let date = new Date();
 
-        let fecha = "1/4/2024"; //mes / dia/ año
+        // let fecha = "1/4/2024"; //mes / dia/ año
+        let fecha = "1/5/2025"; //mes / dia/ año
 
         let acumulador = new Date(fecha).getDate();
 
@@ -261,12 +263,32 @@
 
                     if (acumulador === i && new Date(fecha).getMonth() === numMes) {
 
-                        dates += `<div class="descanso">${i}</div>`;
+
+
+                        // dates += `<div class="descanso">${i}</div>`;
+                        if (fechaAux.getDay() === 2) {
+                            validar = 1;
+                            dates += `<div class="special">${i}</div>`;
+                        }
+                        else {
+
+                            dates += `<div class="descanso">${i}</div>`;
+
+                        }
+
                         acumulador += 8;
+
+
+                        // console.log("// - > " + diasPasados[diasPasados.length - 1 ]);
+
 
                         if (acumulador > lastDay_) {
                             acumulador -= lastDay_;
                         }
+
+                        console.log(acumulador)
+                        console.log(numMes)
+
                     }
 
                     else {
@@ -319,10 +341,21 @@
 
         renderCalendar();
 
+
+
+    </script>
+
+    <script>
         function DeterminarFechaDescanso() {
 
 
-            let mes = new Date(fechaParaTrabajar).getMonth();
+            let testa = new Date();
+            testa.setDate(1)
+            testa.setMonth(0)
+            // testa;
+            // console.log("///-here  " + testa)
+
+            // let mes = new Date(fechaParaTrabajar).getMonth();
             // let dia = new Date(fechaParaTrabajar).getDate();
 
             let MesAux = 0;
@@ -344,7 +377,7 @@
             function calcularDiasPasados(fechaInicio) {
                 let fecha = new Date(fechaInicio); // Crea una nueva fecha a partir de la fecha de inicio
                 //while (fecha < fechaActual) { // Mientras la fecha sea anterior a la fecha actual
-                while (fecha.getFullYear() === 2024) { // Mientras la fecha sea anterior a la fecha actual
+                while (fecha > testa) { // Mientras la fecha sea anterior a la fecha actual
 
                     diasPasados.push(new Date(fecha)); // Agrega la fecha al array
 
@@ -365,15 +398,23 @@
                     //fecha.setDate(fecha.getDate() - diasParaRestar); // Resta 8 días
 
                 }
+                // console.log(fecha.getMonth() - 13);
             }
 
+
+            calcularDiasPasados("1/30/2025")
+            console.log("// - > " + diasPasados[diasPasados.length - 1]);
+
+
             // // // Llama a la función con una fecha de inicio
-            calcularDiasPasados("10/24/2024"); // Cambia esta fecha según sea necesario
+            // calcularDiasPasados("2/7/2025"); // Cambia esta fecha según sea necesario
+            // console.log("// - > " + diasPasados[diasPasados.length - 1 ]);
+
 
             // // Muestra los días pasados resaltados
-            diasPasados.forEach(dia => {
-                console.log(dia.toDateString()); // Muestra la fecha en formato legible
-            });
+            // diasPasados.forEach(dia => {
+            //     console.log(dia.toDateString()); // Muestra la fecha en formato legible
+            // });
 
             /*
             Explicación del Código
@@ -388,8 +429,8 @@
             */
         }
 
-        DeterminarFechaDescanso();
 
+        DeterminarFechaDescanso();
     </script>
 
     <!-- Respaldo -->
