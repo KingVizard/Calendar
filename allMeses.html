@@ -128,30 +128,81 @@
 
 <body>
 
-    <!-- <form>
-        <input id="id">
 
-        <p><Input type="text" placeholder="ingresar Nombre" minlength="5" id="usuarioInp"></Input></p>
-        <p><Input type="number" max="30" min="1" id="fechaInp"></Input></p>
-        <input type="button" value="Guardar" id="btnGuardar">
-    </form> -->
 
     <script>
 
-        // VARIABLES PARA DETERMINAR EL PRIMER DIA DE DESCANSO DEL AÑO, APARTIR DE LA FECHA ACTUAL DE DESCANSO
-        // ---------------
-        let fechaDescansoActual = "10/4/2024";
-        // let fechaDescansoActual = "2/7/2025";
-        let fechaParaTrabajar = new Date(fechaDescansoActual);
-        let dia = fechaParaTrabajar.getDate();
-        // let 
+        //Determina el primer y el ultimo dia de descanso del año 
+        function DeterminarFechaDescanso(fechaInicio) { 
+            //----1ero de enero
+            let fechaAux = new Date("11/1/2025");
+            // fechaAux.setDate(1)
+            // fechaAux.setMonth(0)
 
-        // console.log(disminuir);
+            console.log(fechaAux);
+
+            // break;
+
+            const diasParaRestar = 8; // Intervalo de días
+            const diasPasados = []; // Array para almacenar los días pasados
+
+            // // // Función para calcular y resaltar días pasados
+            // function calcularDiasPasados(fechaInicio) {
+
+            let fecha = new Date(fechaInicio); // Crea una nueva fecha a partir de la fecha de inicio
+            // console.log("fecha incio  --> " + fechaInicio)
+            // console.log("fecha -*  --> " + fecha)
+
+            while (fecha > fechaAux) { // Mientras la fecha sea anterior a la fecha actual
+
+                diasPasados.push(new Date(fecha)); // Agrega la fecha al array
+
+                if (new Date(fecha).getDay() === 3) { //como resta primero se encuentra con el miercoles por lo que resta uno para que se guarde el martes tambien
+                    fecha.setDate(fecha.getDate() - 1); // Resta 8 días
+                }
+                else {
+                    fecha.setDate(fecha.getDate() - diasParaRestar); // Resta 8 días
+                }
+                // break;
+            }
+            // console.log("here "+fecha)
+
+            // calcularDiasPasados("11/12/2025")
+            console.log("primer descanso del año - > " + diasPasados[diasPasados.length - 1]); //obtiene el ultimo elemento del array
+
+
+            // ULTIMO DESCANSO DEL AÑO
+            let fechaAux2XD = new Date();
+            fechaAux2XD.setDate(0)
+            fechaAux2XD.setMonth(11)
+
+            const diasPosteriores = [];
+
+            while (fecha <= fechaAux2XD) {
+                diasPosteriores.push(new Date(fecha))
+                // console.log("MARTES -> " + fecha)
+
+                if (new Date(fecha).getDay() === 2) {
+                    fecha.setDate(fecha.getDate() + 1); // suma 1 día para guardar el martes
+                }
+                else {
+                    fecha.setDate(fecha.getDate() + 8); // suma 8 días
+                }
+            }
+
+            // console.log(diasPosteriores)
+            console.log("ultimo descanso del año - > " + diasPosteriores[diasPosteriores.length - 1]); //obtiene el ultimo elemento del array
+        }
+
+
+        DeterminarFechaDescanso("11/3/2025");
+
+        // ---------------
+
         // ---------------
 
         let date = new Date();
 
-        // let fecha = "1/4/2024"; //mes / dia/ año
         let fecha = "1/5/2025"; //mes / dia/ año
 
         let acumulador = new Date(fecha).getDate();
@@ -238,7 +289,6 @@
 
                 date.setMonth(numMes);//asigna el mes //Enero
 
-
                 let lastDay_ = lastDay(numMes);
                 let prevLastDay_ = prevLastDay(numMes);
                 let lastDayIndex_ = lastDayIndex(numMes);
@@ -257,16 +307,17 @@
                     dates += `<div class='prev-date'>${prevLastDay_ - x + 1}</div>`;
                 }
 
-                for (let i = 1; i <= lastDay_; i++) {
+                for (let i = 1; i <= lastDay_; i++) { //itera hasta el ultimo dia del mes y muestra en el calendario
 
-                    let fechaAux = new Date(date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + i);
-
-                    if (acumulador === i && new Date(fecha).getMonth() === numMes) {
+                    let fechaAux = new Date(date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + i); //ayuda a identificar martes y miercoles (convierte las iteraciones en fechas)
 
 
+                    // if(acumulador ==)
+
+                    if (acumulador === i && new Date(fecha).getMonth() === numMes) { //si acumulador es igual a la iteracion se marca con color azul
 
                         // dates += `<div class="descanso">${i}</div>`;
-                        if (fechaAux.getDay() === 2) {
+                        if (fechaAux.getDay() === 2) { //toma la fecha compuesta de arriba y determina si el dia de martes con ayuda del indice
                             validar = 1;
                             dates += `<div class="special">${i}</div>`;
                         }
@@ -279,15 +330,9 @@
                         acumulador += 8;
 
 
-                        // console.log("// - > " + diasPasados[diasPasados.length - 1 ]);
-
-
                         if (acumulador > lastDay_) {
                             acumulador -= lastDay_;
                         }
-
-                        console.log(acumulador)
-                        console.log(numMes)
 
                     }
 
@@ -325,6 +370,7 @@
                         }
 
                     }
+                    
                 }
 
                 for (let j = 1; j <= nextDays; j++) {
@@ -343,94 +389,8 @@
 
 
 
-    </script>
-
-    <script>
-        function DeterminarFechaDescanso() {
 
 
-            let testa = new Date();
-            testa.setDate(1)
-            testa.setMonth(0)
-            // testa;
-            // console.log("///-here  " + testa)
-
-            // let mes = new Date(fechaParaTrabajar).getMonth();
-            // let dia = new Date(fechaParaTrabajar).getDate();
-
-            let MesAux = 0;
-            let validar_2 = 0;
-
-            // los meses se manejan con indice
-            // for (let mess = parseInt(mes); mess >= 0; mess--) {
-
-            // }
-
-
-
-            //             // Fecha actual
-            //const fechaActual = new Date(); // Obtiene la fecha actual
-            const diasParaRestar = 8; // Intervalo de días
-            const diasPasados = []; // Array para almacenar los días pasados
-
-            // // // Función para calcular y resaltar días pasados
-            function calcularDiasPasados(fechaInicio) {
-                let fecha = new Date(fechaInicio); // Crea una nueva fecha a partir de la fecha de inicio
-                //while (fecha < fechaActual) { // Mientras la fecha sea anterior a la fecha actual
-                while (fecha > testa) { // Mientras la fecha sea anterior a la fecha actual
-
-                    diasPasados.push(new Date(fecha)); // Agrega la fecha al array
-
-                    if (new Date(fecha).getDay() === 3) {
-                        fecha.setDate(fecha.getDate() - 1); // Resta 8 días
-
-                        // validar_2 = 1;
-                        // console.log(days[new Date(fecha).getDay()])
-                    }
-                    else {
-                        fecha.setDate(fecha.getDate() - diasParaRestar); // Resta 8 días
-                        // if (validar_2 > 0) {
-
-                        // }
-
-                        // console.log(new Date(fecha).getDay())
-                    }
-                    //fecha.setDate(fecha.getDate() - diasParaRestar); // Resta 8 días
-
-                }
-                // console.log(fecha.getMonth() - 13);
-            }
-
-
-            calcularDiasPasados("1/30/2025")
-            console.log("// - > " + diasPasados[diasPasados.length - 1]);
-
-
-            // // // Llama a la función con una fecha de inicio
-            // calcularDiasPasados("2/7/2025"); // Cambia esta fecha según sea necesario
-            // console.log("// - > " + diasPasados[diasPasados.length - 1 ]);
-
-
-            // // Muestra los días pasados resaltados
-            // diasPasados.forEach(dia => {
-            //     console.log(dia.toDateString()); // Muestra la fecha en formato legible
-            // });
-
-            /*
-            Explicación del Código
-            Fecha Actual: Se obtiene la fecha actual utilizando new Date().
-            Array de Días Pasados: Se crea un array vacío para almacenar las fechas pasadas.
-            Función calcularDiasPasados: Esta función toma una fecha de inicio y calcula las fechas pasadas restando 8 días en cada iteración.
-            Se utiliza un bucle while para seguir restando días hasta que la fecha calculada sea anterior a la fecha actual.
-            Cada fecha calculada se agrega al array diasPasados.
-            Mostrar Resultados: Finalmente, se recorren las fechas pasadas y se muestran en la consola en un formato legible.
-            Personalización
-            Puedes cambiar la fecha de inicio en la llamada a la función calcularDiasPasados para ajustar el cálculo según tus necesidades. Este código te permitirá resaltar los días pasados en un calendario de manera efectiva.
-            */
-        }
-
-
-        DeterminarFechaDescanso();
     </script>
 
     <!-- Respaldo -->
