@@ -9,6 +9,10 @@
     <title>Dias de descanso</title>
 
     <style>
+        .none {
+            display: none;
+        }
+
         html {
             height: 100vh;
             width: 100vw;
@@ -20,13 +24,7 @@
             width: 100%;
             height: 100vh;
 
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
 
-            justify-items: center;
-            gap: 15px;
-
-            margin: 20px 0px;
         }
 
         .calendar {
@@ -106,7 +104,9 @@
 
         form {
             display: flex;
+            justify-content: center;
             column-gap: 10px;
+            padding: 15px;
         }
 
         .calendar-body {
@@ -123,23 +123,53 @@
                 grid-template-columns: repeat(1, 1fr);
             }
         }
+
+
+        #contenedorCalendar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+
+            justify-items: center;
+            gap: 15px;
+
+            margin: 20px 0px;
+            padding: 5px;
+        }
+
+        .month {
+            width: 100%;
+            background: #0CA;
+            padding: 2px;
+        }
     </style>
 </head>
 
 <body>
 
 
+    <form>
+        <p>
+            <label for="">ingresa tu dia de descanso: </label>
+            <input type="number" max="31" id="inpDiaDescanso">
+            <span id="monthYear"></span>
+        </p>
+        <input type="button" id="btnEnviaDia" value="Guardar">
+    </form>
+
+    <div id="contenedorCalendar"></div>
 
     <script>
 
+
+
         //Determina el primer y el ultimo dia de descanso del año 
-        function DeterminarFechaDescanso(fechaInicio) { 
+        function DeterminarFechaDescanso(fechaInicio) {
             //----1ero de enero
             let fechaAux = new Date("11/1/2025");
             // fechaAux.setDate(1)
             // fechaAux.setMonth(0)
 
-            console.log(fechaAux);
+            // console.log(fechaAux);
 
             // break;
 
@@ -168,7 +198,7 @@
             // console.log("here "+fecha)
 
             // calcularDiasPasados("11/12/2025")
-            console.log("primer descanso del año - > " + diasPasados[diasPasados.length - 1]); //obtiene el ultimo elemento del array
+            // console.log("primer descanso del año - > " + diasPasados[diasPasados.length - 1]); //obtiene el ultimo elemento del array
 
 
             // ULTIMO DESCANSO DEL AÑO
@@ -191,21 +221,47 @@
             }
 
             // console.log(diasPosteriores)
-            console.log("ultimo descanso del año - > " + diasPosteriores[diasPosteriores.length - 1]); //obtiene el ultimo elemento del array
+            // console.log("ultimo descanso del año - > " + diasPosteriores[diasPosteriores.length - 1]); //obtiene el ultimo elemento del array
         }
 
 
         DeterminarFechaDescanso("11/3/2025");
 
         // ---------------
-
+        getMonthYear = document.getElementById('monthYear'); //Establece el mes y el año acual
+        getMonthYear.innerText = '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear();
         // ---------------
 
         let date = new Date();
 
-        let fecha = "1/5/2025"; //mes / dia/ año
+        let fecha = ""; //mes / dia/ año
+        // let fecha = "1/5/2025"; //mes / dia/ año
 
-        let acumulador = new Date(fecha).getDate();
+        let acumulador;
+        // let acumulador = new Date(fecha).getDate();
+        
+        
+            
+        
+        let inpDiaDescanso = document.getElementById('inpDiaDescanso');
+        
+        
+        let btnGetDia = document.getElementById('btnEnviaDia');
+
+        fecha = "1/5/2025"; //mes / dia/ año
+        acumulador = new Date(fecha).getDate();
+
+        btnGetDia.addEventListener("click", function () {
+            //acumulador = parseInt(inpDiaDescanso.value);
+            // console.log(parseInt(inpDiaDescanso.value));   
+
+        // console.log(acumulador);  
+
+            // month_test.remove()
+
+
+        })
+
 
         let validar = 0;
 
@@ -260,7 +316,10 @@
 
 
         function renderCalendar() {
+
             date.setDate(1);
+
+            let contenedorCalendar = document.getElementById('contenedorCalendar');
 
             for (let numMes = 0; numMes <= 11; numMes++) {
                 // CREAR VARIABLES  
@@ -282,10 +341,6 @@
                 month_test.classList.add('month')
                 month_test.appendChild(calendar_header_test), month_test.appendChild(daysElement_test), month_test.appendChild(monthDays_test);
 
-                const calendar_test = document.createElement('div');
-                calendar_test.classList.add('calendar')
-                calendar_test.appendChild(month_test);
-                //
 
                 date.setMonth(numMes);//asigna el mes //Enero
 
@@ -312,8 +367,6 @@
                     let fechaAux = new Date(date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + i); //ayuda a identificar martes y miercoles (convierte las iteraciones en fechas)
 
 
-                    // if(acumulador ==)
-
                     if (acumulador === i && new Date(fecha).getMonth() === numMes) { //si acumulador es igual a la iteracion se marca con color azul
 
                         // dates += `<div class="descanso">${i}</div>`;
@@ -336,7 +389,8 @@
 
                     }
 
-                    else {
+                    else
+                        // {
                         if (acumulador > 0) {
 
                             if (i === acumulador) {
@@ -368,9 +422,12 @@
 
                             }
                         }
+                        else {
+                            dates += `<div>${i}</div>`; //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
+                        }
 
-                    }
-                    
+                    // }
+
                 }
 
                 for (let j = 1; j <= nextDays; j++) {
@@ -379,9 +436,15 @@
 
                 monthDays_test.innerHTML = dates;
 
-                document.body.appendChild(calendar_test); //imprime al elemento padre
+                // document.body.appendChild(calendar_test); //imprime al elemento padre
+                document.body.appendChild(month_test); //imprime al elemento padre
+
+                contenedorCalendar.appendChild(month_test);
+
+                
 
             } //for
+
 
         }
 
