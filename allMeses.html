@@ -239,28 +239,31 @@
 
         let acumulador;
         // let acumulador = new Date(fecha).getDate();
-        
-        
-            
-        
+
+
+
+
         let inpDiaDescanso = document.getElementById('inpDiaDescanso');
-        
-        
+
+
         let btnGetDia = document.getElementById('btnEnviaDia');
 
         fecha = "1/5/2025"; //mes / dia/ año
         acumulador = new Date(fecha).getDate();
 
-        btnGetDia.addEventListener("click", function () {
-            //acumulador = parseInt(inpDiaDescanso.value);
-            // console.log(parseInt(inpDiaDescanso.value));   
 
-        // console.log(acumulador);  
-
-            // month_test.remove()
+        // btnGetDia.addEventListener("click", function () {
+        //     //acumulador = parseInt(inpDiaDescanso.value);
+        //     // console.log(parseInt(inpDiaDescanso.value));   
 
 
-        })
+        //     // month_test.remove()
+
+        //     remover = 0;
+        //     console.log(remover);
+
+
+        // })
 
 
         let validar = 0;
@@ -368,65 +371,40 @@
 
                     let fechaAux = new Date(date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + i); //ayuda a identificar martes y miercoles (convierte las iteraciones en fechas)
 
+                    if (acumulador > 0) {
 
-                    if (acumulador === i && new Date(fecha).getMonth() === numMes) { //si acumulador es igual a la iteracion se marca con color azul
+                        if (acumulador === i) {
 
-                        // dates += `<div class="descanso">${i}</div>`;
-                        if (fechaAux.getDay() === 2) { //toma la fecha compuesta de arriba y determina si el dia de martes con ayuda del indice
-                            validar = 1;
-                            dates += `<div class="special">${i}</div>`;
-                        }
-                        else {
-
-                            dates += `<div class="descanso">${i}</div>`;
-
-                        }
-
-                        acumulador += 8;
-
-
-                        if (acumulador > lastDay_) {
-                            acumulador -= lastDay_;
-                        }
-
-                    }
-
-                    else
-                        // {
-                        if (acumulador > 0) {
-
-                            if (i === acumulador) {
-
-                                if (fechaAux.getDay() === 2) {
-                                    validar = 1;
-                                    dates += `<div class="special">${i}</div>`;
-                                }
-                                else {
-
-                                    dates += `<div class="descanso">${i}</div>`;
-
-                                }
-                                acumulador += 8;
-
-                                if (acumulador > lastDay_) {
-                                    acumulador -= lastDay_;
-                                }
+                            if (fechaAux.getDay() === 2) {
+                                validar = 1;
+                                dates += `<div class="special">${i}</div>`;
                             }
                             else {
+                                dates += `<div class="descanso">${i}</div>`;
+                            }
 
-                                if (validar > 0 && fechaAux.getDay() === 3) {
-                                    dates += `<div class="special">${i}</div>`;
-                                    acumulador += 1;
-                                    validar = 0;
-                                } else {
-                                    dates += `<div>${i}</div>`; //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
-                                }
+                            acumulador += 8;
 
+                            if (acumulador > lastDay_) {
+                                acumulador -= lastDay_;
                             }
                         }
                         else {
-                            dates += `<div>${i}</div>`; //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
+
+                            if (validar > 0 && fechaAux.getDay() === 3) {
+                                dates += `<div class="special">${i}</div>`;
+                                acumulador += 1;
+                                validar = 0;
+                            }
+                            else {
+                                dates += `<div>${i}</div>`; //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
+                            }
                         }
+                    }
+                    else {
+                        dates += `<div>${i}</div>`; //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
+                    }
+
                 }
 
                 for (let j = 1; j <= nextDays; j++) {
@@ -440,18 +418,16 @@
 
                 contenedorCalendar.appendChild(month_test);
 
-                
 
-            } //for
+
+
+            }
 
 
         }
 
+        
         renderCalendar();
-
-
-
-
 
     </script>
 
