@@ -338,8 +338,10 @@
                 calendar_header_test.appendChild(monthName_test);
 
                 const month_test = document.createElement('div');
+                // month_test = document.createElement('div');
                 month_test.classList.add('month')
                 month_test.appendChild(calendar_header_test), month_test.appendChild(daysElement_test), month_test.appendChild(monthDays_test);
+                // month_test.remove()//
 
 
                 date.setMonth(numMes);//asigna el mes //Enero
@@ -425,9 +427,6 @@
                         else {
                             dates += `<div>${i}</div>`; //resto de dias del mes actual // mes que se ve, depende de esto date.setMonth(mes) 
                         }
-
-                    // }
-
                 }
 
                 for (let j = 1; j <= nextDays; j++) {
